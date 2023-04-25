@@ -1,0 +1,97 @@
+git:
+- name: opendatahub-operator
+  automerge: 'no'
+  src:
+    url: https://github.com/opendatahub-io/opendatahub-operator.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/opendatahub-operator.git
+    branch: main
+- name: odh-manifests
+  automerge: 'no'
+  src:
+    url: https://github.com/opendatahub-io/odh-manifests.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/odh-manifests.git
+    branch: main
+- name: odh-dashboard
+  automerge: 'no'
+  src:
+    url: https://github.com/opendatahub-io/odh-dashboard.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/odh-dashboard.git
+    branch: master
+- name: kubeflow
+  automerge: 'no'
+  src:
+    url: https://github.com/opendatahub-io/kubeflow.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/kubeflow.git
+    branch: master
+- name: modelmesh-serving
+  automerge: 'no'
+  src:
+    url: https://github.com/opendatahub-io/modelmesh-serving.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/modelmesh-serving.git
+    branch: master
+- name: odh-model-controller
+  automerge: 'no'
+  src:
+    url: https://github.com/opendatahub-io/odh-model-controller.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/odh-model-controller.git
+    branch: master
+- name: rest-proxy
+  automerge: 'no'
+  src:
+    url: https://github.com/opendatahub-io/rest-proxy.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/rest-proxy.git
+    branch: master
+- name: modelmesh
+  automerge: 'no'
+  src:
+    url: https://github.com/opendatahub-io/modelmesh.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/modelmesh.git
+    branch: master
+- name: modelmesh-runtime-adapter
+  automerge: 'no'
+  src:
+    url: https://github.com/opendatahub-io/modelmesh-runtime-adapter.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/modelmesh-runtime-adapter.git
+    branch: master
+- name: data-science-pipelines
+  automerge: 'no'
+  src:
+    url: https://github.com/opendatahub-io/data-science-pipelines.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/data-science-pipelines.git
+    branch: master
+- name: trustyai-explainability
+  automerge: 'no'
+  src:
+    url: https://github.com/trustyai-explainability/trustyai-explainability.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/trustyai-explainability.git
+    branch: master
+- name: data-science-pipelines-operator
+  automerge: 'no'
+  src:
+    url: https://github.com/opendatahub-io/data-science-pipelines-operator.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/data-science-pipelines-operator.git
+    branch: master
