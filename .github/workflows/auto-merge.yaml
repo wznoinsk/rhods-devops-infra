@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        mapping: ${{ fromJson(needs.setup.outputs.matrix) }}
+        mapping: ${{ fromJSON(needs.setup.outputs.matrix) }}
     steps:
       - name: Generate github-app token
         id: app-token
