@@ -78,7 +78,3 @@ jobs:
           downstream_repo: "${{ matrix.mapping.dest.url }}"
           downstream_branch: "${{ matrix.mapping.dest.branch }}"
           token: ${{ steps.app-token.outputs.token }}
-          fetch_args: ""
-          merge_args: ""
-          push_args: ""
-          spawn_logs: "false"
