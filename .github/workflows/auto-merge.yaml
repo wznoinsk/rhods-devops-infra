@@ -1,0 +1,80 @@
+name: Auto-Merge - ODH to RHODS
+
+on:
+  workflow_dispatch:
+    inputs:
+      repositories:
+        type: choice
+        description: select repositories
+        options:
+          - all
+          - opendatahub-operator
+          - odh-manifests
+          - odh-dashboard
+          - kubeflow
+          - modelmesh-serving
+          - odh-model-controller
+          - rest-proxy
+          - modelmesh
+          - modelmesh-runtime-adapter
+          - data-science-pipelines
+          - trustyai-explainability
+          - data-science-pipelines-operator
+#  schedule:
+#    - cron: '0 0 * * *'
+
+permissions:
+  packages: write
+  contents: read
+  id-token: write
+
+env:
+  SOURCE_MAP: "src/config/source_map.yaml"
+jobs:
+
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - id: matrix
+        run: |
+          value=$(yq -o json $SOURCE_MAP)
+          value=$(echo $value | jq -r '.git' | jq -c 'map(select(.automerge == "yes"))' | sed 's/ //g' | awk NF=NF RS= OFS=)
+          if [[ "${{ github.event_name  }}" == "workflow_dispatch" ]] && [[ "${{ github.event.inputs.repositories }}" != "all" ]]
+          then
+            value=$(echo $value | jq -c 'map(select(.name == "${{ github.event.inputs.repositories }}"))' | sed 's/ //g' | awk NF=NF RS= OFS=)
+          fi
+          echo "repos=$value"
+          length=$(echo $value | jq '. | length')
+          echo "$length repo(s) will be auto-merged by this workflow"
+          if [[ $length -eq 0 ]]
+          then 
+            echo "No valid repos available for auto-merge"
+            exit 1
+          fi
+          echo "::set-output name=value::$value"
+  build:
+    needs: [ setup ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mapping: ${{ fromJSON(needs.setup.outputs.matrix) }}
+    steps:
+      - name: Generate github-app token
+        id: app-token
+        uses: getsentry/action-github-app-token@v2
+        with:
+          app_id: ${{ secrets.DEVOPS_APP_ID }}
+          private_key: ${{ secrets.DEVOPS_APP_PRIVATE_KEY }}
+
+      - name: GitHub Sync to Upstream Repository
+        uses: dchourasia/sync-upstream-repo@1.0
+        with:
+          upstream_repo: "${{ matrix.mapping.src.url }}"
+          upstream_branch: "${{ matrix.mapping.src.branch }}"
+          downstream_repo: "${{ matrix.mapping.dest.url }}"
+          downstream_branch: "${{ matrix.mapping.dest.branch }}"
+          token: ${{ steps.app-token.outputs.token }}
