@@ -21,7 +21,7 @@ on:
           - trustyai-explainability
           - data-science-pipelines-operator
   schedule:
-    - cron: '07 13 * * *'
+    - cron: '16 13 * * *'
 
 permissions:
   packages: write
