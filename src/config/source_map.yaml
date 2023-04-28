@@ -72,7 +72,7 @@ git:
     url: https://github.com/red-hat-data-services/modelmesh-runtime-adapter.git
     branch: main
 - name: data-science-pipelines
-  automerge: 'no'
+  automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/data-science-pipelines.git
     branch: master
