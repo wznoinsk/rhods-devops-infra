@@ -20,8 +20,8 @@ on:
           - data-science-pipelines
           - trustyai-explainability
           - data-science-pipelines-operator
-#  schedule:
-#    - cron: '0 0 * * *'
+  schedule:
+    - cron: '07 13 * * *'
 
 permissions:
   packages: write
