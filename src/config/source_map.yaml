@@ -32,42 +32,42 @@ git:
     url: https://github.com/red-hat-data-services/kubeflow.git
     branch: main
 - name: modelmesh-serving
-  automerge: 'no'
+  automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/modelmesh-serving.git
-    branch: main
+    branch: release-v0.11.0-alpha
   dest:
     url: https://github.com/red-hat-data-services/modelmesh-serving.git
     branch: main
 - name: odh-model-controller
-  automerge: 'no'
+  automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/odh-model-controller.git
-    branch: main
+    branch: release-v0.11.0-alpha
   dest:
     url: https://github.com/red-hat-data-services/odh-model-controller.git
     branch: main
 - name: rest-proxy
-  automerge: 'no'
+  automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/rest-proxy.git
-    branch: main
+    branch: release-v0.10.0
   dest:
     url: https://github.com/red-hat-data-services/rest-proxy.git
     branch: main
 - name: modelmesh
-  automerge: 'no'
+  automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/modelmesh.git
-    branch: main
+    branch: release-v0.11.0-alpha
   dest:
     url: https://github.com/red-hat-data-services/modelmesh.git
     branch: main
 - name: modelmesh-runtime-adapter
-  automerge: 'no'
+  automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/modelmesh-runtime-adapter.git
-    branch: main
+    branch: release-v0.11.0-alpha
   dest:
     url: https://github.com/red-hat-data-services/modelmesh-runtime-adapter.git
     branch: main
