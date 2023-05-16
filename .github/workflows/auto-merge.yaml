@@ -60,6 +60,7 @@ jobs:
     needs: [ setup ]
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         mapping: ${{ fromJSON(needs.setup.outputs.matrix) }}
     steps:
@@ -71,7 +72,7 @@ jobs:
           private_key: ${{ secrets.DEVOPS_APP_PRIVATE_KEY }}
 
       - name: GitHub Sync to Upstream Repository
-        uses: dchourasia/sync-upstream-repo@1.0
+        uses: dchourasia/sync-upstream-repo@1.01
         with:
           upstream_repo: "${{ matrix.mapping.src.url }}"
           upstream_branch: "${{ matrix.mapping.src.branch }}"
