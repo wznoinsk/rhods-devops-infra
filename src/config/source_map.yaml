@@ -87,6 +87,14 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/trustyai-explainability.git
     branch: main
+- name: trustyai-service-operator
+  automerge: 'yes'
+  src:
+    url: https://github.com/trustyai-explainability/trustyai-service-operator.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/trustyai-service-operator.git
+    branch: main
 - name: data-science-pipelines-operator
   automerge: 'yes'
   src:
