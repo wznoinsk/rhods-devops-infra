@@ -103,3 +103,35 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/data-science-pipelines-operator.git
     branch: main
+- name: codeflare-operator
+  automerge: 'yes'
+  src:
+    url: https://github.com/project-codeflare/codeflare-operator.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/codeflare-operator.git
+    branch: main
+- name: distributed-workloads
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/distributed-workloads.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/distributed-workloads.git
+    branch: main
+- name: kuberay
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/kuberay.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/kuberay.git
+    branch: main
+- name: multi-cluster-app-dispatcher
+  automerge: 'yes'
+  src:
+    url: https://github.com/project-codeflare/multi-cluster-app-dispatcher.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/multi-cluster-app-dispatcher.git
+    branch: main
