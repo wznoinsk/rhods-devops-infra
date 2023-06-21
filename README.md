@@ -14,7 +14,7 @@ Enable Auto-Merge for a repo
 1. update the [auto-merge config yaml](https://github.com/red-hat-data-services/rhods-devops-infra/blob/main/src/config/source_map.yaml) for required repo and raise a PR
     1. provide appropriate upstream and downstream URLs and branches
    2. set automerge to yes
-2. Ensure that [DevOps bot](https://github.com/organizations/red-hat-data-services/settings/installations/36825452) has permission to the target downstream repo (needs admin access)
+2. Ensure that [DevOps bot](https://github.com/organizations/red-hat-data-services/settings/installations/36825452) has permission to the target downstream repo (this step needs admin access, here is the [list of members with admin access](https://github.com/orgs/red-hat-data-services/people?query=role%3Aowner))
 3. Test it manually (optional):
     1. Go to [the workflow](https://github.com/red-hat-data-services/rhods-devops-infra/actions/workflows/auto-merge.yaml)
    2. Click on 'Run Workflow'
