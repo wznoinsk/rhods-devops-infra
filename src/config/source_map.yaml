@@ -175,11 +175,11 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/caikit-tgis-backend.git
     branch: main
-- name: caikit-tgis-backend
+- name: kserve
   automerge: 'yes'
   src:
-    url: https://github.com/opendatahub-io/caikit-tgis-backend.git
+    url: https://github.com/opendatahub-io/kserve.git
     branch: master
   dest:
-    url: https://github.com/red-hat-data-services/caikit-tgis-backend.git
+    url: https://github.com/red-hat-data-services/kserve.git
     branch: master
