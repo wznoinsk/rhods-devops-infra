@@ -135,3 +135,51 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/multi-cluster-app-dispatcher.git
     branch: main
+- name: text-generation-inference
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/text-generation-inference.git
+    branch: release
+  dest:
+    url: https://github.com/red-hat-data-services/text-generation-inference.git
+    branch: main
+- name: caikit-tgis-serving
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/caikit-tgis-serving.git
+    branch: release
+  dest:
+    url: https://github.com/red-hat-data-services/caikit-tgis-serving.git
+    branch: main
+- name: caikit
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/caikit.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/caikit.git
+    branch: main
+- name: caikit-nlp
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/caikit-nlp.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/caikit-nlp.git
+    branch: main
+- name: caikit-tgis-backend
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/caikit-tgis-backend.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/caikit-tgis-backend.git
+    branch: main
+- name: kserve
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/kserve.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/kserve.git
+    branch: master
