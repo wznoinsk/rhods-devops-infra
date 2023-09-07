@@ -8,6 +8,7 @@ on:
         description: select repositories
         options:
           - all
+          - rhods-operator
           - opendatahub-operator
           - odh-manifests
           - odh-dashboard
@@ -19,7 +20,18 @@ on:
           - modelmesh-runtime-adapter
           - data-science-pipelines
           - trustyai-explainability
+          - trustyai-service-operator
           - data-science-pipelines-operator
+          - codeflare-operator
+          - distributed-workloads
+          - kuberay
+          - multi-cluster-app-dispatcher
+          - text-generation-inference
+          - caikit-tgis-serving
+          - caikit-nlp
+          - caikit
+          - kserve
+          - caikit-tgis-backend
   schedule:
     - cron: '0 0 * * *'
 
