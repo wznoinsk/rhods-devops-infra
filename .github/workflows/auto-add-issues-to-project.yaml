@@ -16,5 +16,5 @@ jobs:
           private_key: ${{ secrets.DEVOPS_APP_PRIVATE_KEY }}
       - uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/orgs/opendatahub-io/projects/2
+          project-url: https://github.com/orgs/red-hat-data-services/projects/2
           github-token: ${{ steps.app-token.outputs.token }}
