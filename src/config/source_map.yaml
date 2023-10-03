@@ -184,7 +184,7 @@ git:
     url: https://github.com/red-hat-data-services/kserve.git
     branch: master
 - name: rhods-operator
-  automerge: 'yes'
+  automerge: 'no'
   src:
     url: https://github.com/opendatahub-io/opendatahub-operator.git
     branch: main
