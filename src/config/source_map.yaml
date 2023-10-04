@@ -104,9 +104,9 @@ git:
     url: https://github.com/red-hat-data-services/data-science-pipelines-operator.git
     branch: main
 - name: codeflare-operator
-  automerge: 'yes'
+  automerge: 'no'
   src:
-    url: https://github.com/project-codeflare/codeflare-operator.git
+    url: https://github.com/opendatahub-io/codeflare-operator.git
     branch: main
   dest:
     url: https://github.com/red-hat-data-services/codeflare-operator.git
@@ -127,14 +127,6 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/kuberay.git
     branch: master
-- name: multi-cluster-app-dispatcher
-  automerge: 'yes'
-  src:
-    url: https://github.com/project-codeflare/multi-cluster-app-dispatcher.git
-    branch: main
-  dest:
-    url: https://github.com/red-hat-data-services/multi-cluster-app-dispatcher.git
-    branch: main
 - name: text-generation-inference
   automerge: 'yes'
   src:
