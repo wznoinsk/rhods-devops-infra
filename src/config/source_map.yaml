@@ -35,7 +35,7 @@ git:
   automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/modelmesh-serving.git
-    branch: release-0.11.0
+    branch: release-0.11.1
   dest:
     url: https://github.com/red-hat-data-services/modelmesh-serving.git
     branch: main
@@ -43,7 +43,7 @@ git:
   automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/odh-model-controller.git
-    branch: release-0.11.0
+    branch: release-0.11.1
   dest:
     url: https://github.com/red-hat-data-services/odh-model-controller.git
     branch: main
@@ -51,7 +51,7 @@ git:
   automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/rest-proxy.git
-    branch: release-0.11.0
+    branch: release-0.11.1
   dest:
     url: https://github.com/red-hat-data-services/rest-proxy.git
     branch: main
@@ -59,7 +59,7 @@ git:
   automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/modelmesh.git
-    branch: release-0.11.0
+    branch: release-0.11.1
   dest:
     url: https://github.com/red-hat-data-services/modelmesh.git
     branch: main
@@ -67,7 +67,7 @@ git:
   automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/modelmesh-runtime-adapter.git
-    branch: release-0.11.0
+    branch: release-0.11.1
   dest:
     url: https://github.com/red-hat-data-services/modelmesh-runtime-adapter.git
     branch: main
@@ -171,7 +171,7 @@ git:
   automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/kserve.git
-    branch: release-v0.11.0
+    branch: release-v0.11.1
   dest:
     url: https://github.com/red-hat-data-services/kserve.git
     branch: master
