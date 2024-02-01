@@ -184,7 +184,7 @@ git:
     url: https://github.com/red-hat-data-services/rhods-operator.git
     branch: main
 - name: openvino_model_server
-  automerge: 'yes'
+  automerge: 'no'
   src:
     url: https://github.com/opendatahub-io/openvino_model_server.git
     branch: 2023.1-release
