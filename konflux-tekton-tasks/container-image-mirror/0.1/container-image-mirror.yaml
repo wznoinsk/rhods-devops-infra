@@ -1,0 +1,52 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: container-image-mirror
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.38.0"
+    tekton.dev/categories: Container
+    tekton.dev/tags: container
+    tekton.dev/displayName: "container image mirror"
+    tekton.dev/platforms: "linux/amd64,linux/s390x,linux/ppc64le,linux/arm64"
+spec:
+  description: >-
+    This task is to mirror the image from one repository to other
+  workspaces:
+    - name: output
+      description: The git repo will be cloned onto the volume backing this Workspace.
+  params:
+    - name: src_image
+      description: Repository URL to clone from.
+      type: string
+    - name: src_image_digest
+      description: Revision to checkout. (branch, tag, sha, ref, etc...)
+      type: string
+      default: ""
+    - name: dest_repo
+      description: Refspec to fetch before checking out revision.
+      default: ""
+  results:
+    - name: dest_image_path
+      description: The precise commit SHA that was fetched by this Task.
+    - name: dest_image_digest
+      description: The precise URL that was fetched by this Task.
+  steps:
+    - name: mirror
+      image: "$(params.gitInitImage)"
+      env:
+      - name: PARAM_SRC_IMAGE
+        value: $(params.src_image)
+      - name: PARAM_SRC_IMAGE_DIGEST
+        value: $(params.src_image_digest)
+      - name: PARAM_DEST_REPO
+        value: $(params.dest_repo)
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+      script: |
+        #!/usr/bin/env sh
+        set -eu
+        podman pull ${PARAM_SRC_IMAGE}:$(params.src_image_digest)
+        podman images
