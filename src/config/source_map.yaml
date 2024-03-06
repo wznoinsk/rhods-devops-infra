@@ -167,6 +167,22 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/caikit-tgis-backend.git
     branch: main
+- name: model-registry
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/model-registry.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/model-registry.git
+    branch: main
+- name: model-registry-operator
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/model-registry-operator.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/model-registry-operator.git
+    branch: main
 - name: kserve
   automerge: 'yes'
   src:
