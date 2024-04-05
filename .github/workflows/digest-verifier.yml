@@ -22,3 +22,8 @@ jobs:
       run: |
         chmod +x ./Digest_verifier/Digest-verifier.sh
         ./Digest_verifier/Digest-verifier.sh $BRANCH_NAME
+
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
