@@ -213,5 +213,5 @@ git:
     url: https://github.com/foundation-model-stack/fms-hf-tuning.git
     branch: main
   dest:
-    url: https://github.com/red-hat-data-services/fms-hf-tuning
+    url: https://github.com/red-hat-data-services/fms-hf-tuning.git
     branch: main
