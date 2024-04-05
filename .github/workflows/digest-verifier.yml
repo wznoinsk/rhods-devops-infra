@@ -27,4 +27,5 @@ jobs:
       if: ${{ failure() }}
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_MESSAGE: ':red-warning: Image Digest Mismatch Found!'
+        SLACK_WEBHOOK: ${{ secrets.RHOAI_DEVOPS_SLACK_WEBHOOK }}
