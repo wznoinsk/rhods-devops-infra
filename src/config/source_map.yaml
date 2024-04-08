@@ -71,6 +71,14 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/modelmesh-runtime-adapter.git
     branch: main
+- name: data-science-pipelines-tekton
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/data-science-pipelines-tekton.git
+    branch: master
+  dest:
+    url: https://github.com/red-hat-data-services/data-science-pipelines-tekton.git
+    branch: master
 - name: data-science-pipelines
   automerge: 'yes'
   src:
@@ -79,6 +87,14 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/data-science-pipelines.git
     branch: master
+- name: data-science-pipelines-operator
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/data-science-pipelines-operator.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/data-science-pipelines-operator.git
+    branch: main
 - name: trustyai-explainability
   automerge: 'no'
   src:
@@ -94,14 +110,6 @@ git:
     branch: main
   dest:
     url: https://github.com/red-hat-data-services/trustyai-service-operator.git
-    branch: main
-- name: data-science-pipelines-operator
-  automerge: 'yes'
-  src:
-    url: https://github.com/opendatahub-io/data-science-pipelines-operator.git
-    branch: main
-  dest:
-    url: https://github.com/red-hat-data-services/data-science-pipelines-operator.git
     branch: main
 - name: codeflare-operator
   automerge: 'no'
