@@ -55,6 +55,11 @@ extract_names_with_sbom_extension() {
  local tag="$1"
  local hash="$2"
 
+ if [ -z "$hash" ]; then
+    echo "Error: The $name image is referenced using floating tags. Exiting..."
+    exit 1
+ fi
+
  json_response=$(curl -s https://quay.io/api/v1/repository/modh/$tag/tag/ | jq -r '.tags | .[:3] | map(select(.name | endswith(".sbom"))) | .[].name')
  local names_part=$(echo "$json_response" | sed 's/^sha256-\(.*\)\.sbom$/\1/')
  echo "$names_part"
