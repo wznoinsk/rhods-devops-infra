@@ -60,8 +60,8 @@ extract_names_with_sbom_extension() {
     exit 1
  fi
 
- json_response=$(curl -s https://quay.io/api/v1/repository/modh/$tag/tag/ | jq -r '.tags | .[:3] | map(select(.name | endswith(".sbom"))) | .[].name')
- local names_part=$(echo "$json_response" | sed 's/^sha256-\(.*\)\.sbom$/\1/')
+ json_response=$(curl -s https://quay.io/api/v1/repository/modh/$tag/tag/ | jq -r '.tags | .[:3] | map(select(.name | endswith(".att"))) | .[].name')
+ local names_part=$(echo "$json_response" | sed 's/^sha256-\(.*\)\.att$/\1/')
  echo "$names_part"
 
  if [ "$hash" = "$names_part" ]; then
