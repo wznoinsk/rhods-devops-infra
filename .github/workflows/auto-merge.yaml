@@ -85,7 +85,7 @@ jobs:
       - id: git-configuration
         run: |
           echo "ignore = ${{ matrix.mapping.src.ignore }}"
-          ignore="${{ matrix.mapping.src.ignore }}"
+          ignore="${{ matrix.mapping.ignore }}"
           if [[ -z $ignore ]]
           then
             echo "no files added to ignore"
