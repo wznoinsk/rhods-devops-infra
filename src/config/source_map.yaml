@@ -127,6 +127,7 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/distributed-workloads.git
     branch: main
+  ignore: codeflare-stack/base/params.env
 - name: kuberay
   automerge: 'no'
   src:
