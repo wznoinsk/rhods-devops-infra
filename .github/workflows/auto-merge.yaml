@@ -82,12 +82,14 @@ jobs:
         with:
           app_id: ${{ secrets.DEVOPS_APP_ID }}
           private_key: ${{ secrets.DEVOPS_APP_PRIVATE_KEY }}
-
-      - name: GitHub Sync to Upstream Repository
-        uses: dchourasia/sync-upstream-repo@1.01
-        with:
-          upstream_repo: "${{ matrix.mapping.src.url }}"
-          upstream_branch: "${{ matrix.mapping.src.branch }}"
-          downstream_repo: "${{ matrix.mapping.dest.url }}"
-          downstream_branch: "${{ matrix.mapping.dest.branch }}"
-          token: ${{ steps.app-token.outputs.token }}
+      - id: git-configuration
+        run: |
+          echo "ignore = ${{ matrix.mapping.src.ignore }}"
+          if [[ -z ${{ matrix.mapping.src.ignore }} ]]
+          then
+            echo "no files added to ignore"
+          fi
+          if [[ -n ${{ matrix.mapping.src.ignore }} ]]
+          then
+            echo "ignore = ${{ matrix.mapping.src.ignore }}"
+          fi
