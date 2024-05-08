@@ -199,6 +199,7 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/kserve.git
     branch: master
+  ignore: config/overlays/odh/params.env
 - name: rhods-operator
   automerge: 'no'
   src:
