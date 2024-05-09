@@ -93,10 +93,11 @@ jobs:
              echo "$exclusion merge=ours" >> .gitattributes
           done
       - name: GitHub Sync to Upstream Repository
-        uses: dchourasia/sync-upstream-repo@1.02
+        uses: dchourasia/sync-upstream-repo@1.03
         with:
           upstream_repo: "${{ matrix.mapping.src.url }}"
           upstream_branch: "${{ matrix.mapping.src.branch }}"
           downstream_repo: "${{ matrix.mapping.dest.url }}"
           downstream_branch: "${{ matrix.mapping.dest.branch }}"
           token: ${{ steps.app-token.outputs.token }}
+          ignore_files: ${{ matrix.mapping.ignore }}
