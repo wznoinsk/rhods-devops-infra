@@ -1,4 +1,12 @@
 git:
+- name: optima
+  automerge: 'yes'
+  src:
+    url: https://github.com/dchourasiaorg/rhoai-devops-optima.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/rhoai-devops-optima.git
+    branch: main
 - name: opendatahub-operator
   automerge: 'no'
   src:
