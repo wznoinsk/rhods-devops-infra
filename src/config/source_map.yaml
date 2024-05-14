@@ -7,6 +7,7 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/rhoai-devops-optima.git
     branch: main
+  ignore: newfile.txt
 - name: opendatahub-operator
   automerge: 'no'
   src:
