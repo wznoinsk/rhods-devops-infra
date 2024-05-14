@@ -8,7 +8,6 @@ on:
         description: select repositories
         options:
           - all
-          - optima
           - rhods-operator
           - opendatahub-operator
           - odh-manifests
@@ -42,7 +41,7 @@ permissions:
   id-token: write
 
 env:
-  SOURCE_MAP: "src/config/upstream-downstream-source-map.yaml"
+  SOURCE_MAP: "src/config/source_map.yaml"
 jobs:
 
   setup:
