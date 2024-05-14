@@ -8,6 +8,7 @@ on:
         description: select repositories
         options:
           - all
+          - optima
           - rhods-operator
           - opendatahub-operator
           - odh-manifests
