@@ -73,6 +73,7 @@ jobs:
           releases=$(yq -o json $RELEASES)
           releases=$(echo $releases | jq -r '.releases')
           echo "releases = $releases"
+          echo "value = $value"
           echo "::set-output name=value::$value"
           echo "::set-output name=releases::$releases"
 
