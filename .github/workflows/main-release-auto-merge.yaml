@@ -94,7 +94,7 @@ jobs:
              echo "$exclusion merge=ours" >> .gitattributes
           done
       - name: GitHub Sync to Upstream Repository
-        uses: dchourasia/sync-git-branches@master
+        uses: dchourasia/sync-git-branches@main
         with:
           upstream_repo: "${{ matrix.mapping.src.url }}"
           upstream_branch: "${{ matrix.mapping.src.branch }}"
