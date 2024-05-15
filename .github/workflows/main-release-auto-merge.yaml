@@ -43,12 +43,14 @@ permissions:
 
 env:
   SOURCE_MAP: "src/config/main-release-source-map.yaml"
+  RELEASES: "src/config/releases.yaml"
 jobs:
 
   setup:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.matrix.outputs.value }}
+      releases: ${{ steps.matrix.outputs.releases }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -68,7 +70,11 @@ jobs:
             echo "No valid repos available for auto-merge"
             exit 1
           fi
+          releases=$(yq -o json $RELEASES)
+          releases=$(echo $value | jq -r '.releases')
           echo "::set-output name=value::$value"
+          echo "::set-output name=releases::$releases"
+
   build:
     needs: [ setup ]
     runs-on: ubuntu-latest
@@ -76,6 +82,7 @@ jobs:
       fail-fast: false
       matrix:
         mapping: ${{ fromJSON(needs.setup.outputs.matrix) }}
+        release: ${{ fromJSON(needs.setup.outputs.releases) }}
     steps:
       - name: Generate github-app token
         id: app-token
@@ -99,7 +106,7 @@ jobs:
           upstream_repo: "${{ matrix.mapping.src.url }}"
           upstream_branch: "${{ matrix.mapping.src.branch }}"
           downstream_repo: "${{ matrix.mapping.dest.url }}"
-          downstream_branch: "${{ matrix.mapping.dest.branch }}"
+          downstream_branch: "${{ matrix.release }}"
           token: ${{ steps.app-token.outputs.token }}
           ignore_files: "${{ matrix.mapping.ignore }}"
           merge_args: "--no-edit"
