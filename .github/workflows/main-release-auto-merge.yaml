@@ -71,7 +71,7 @@ jobs:
             exit 1
           fi
           releases=$(yq -o json $RELEASES)
-          releases=$(echo $value | jq -r '.releases')
+          releases=$(echo $releases | jq -r '.releases')
           echo "::set-output name=value::$value"
           echo "::set-output name=releases::$releases"
 
