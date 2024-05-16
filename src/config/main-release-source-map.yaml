@@ -2,7 +2,6 @@ git:
 - name: optima
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/rhoai-devops-optima.git
-  src-branch: main
   ignore-files: newfile.txt
 - name: opendatahub-operator
   automerge: 'no'
