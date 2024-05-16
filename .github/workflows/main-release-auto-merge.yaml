@@ -110,5 +110,5 @@ jobs:
           downstream_repo: "${{ matrix.mapping.dest.url }}"
           downstream_branch: "${{ matrix.release }}"
           token: ${{ steps.app-token.outputs.token }}
-          ignore_files: "${{ matrix.mapping.ignore }}"
+          ignore_files: "${{ matrix.mapping.ignore-files }}"
           merge_args: "--no-edit"
