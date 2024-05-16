@@ -1,4 +1,4 @@
-name: Auto-Merge - Main to Release
+name: Main to Release - Auto-Merge
 
 on:
   workflow_dispatch:
@@ -9,30 +9,26 @@ on:
         options:
           - all
           - optima
-          - rhods-operator
-          - opendatahub-operator
-          - odh-manifests
-          - odh-dashboard
+          - argo-workflows
+          - codeflare-operator
+          - data-science-pipelines
+          - data-science-pipelines-operator
+          - data-science-pipelines-tekton
+          - kserve
           - kubeflow
-          - modelmesh-serving
-          - odh-model-controller
-          - rest-proxy
+          - kuberay
+          - kueue
+          - ml-metadata
           - modelmesh
           - modelmesh-runtime-adapter
-          - data-science-pipelines
+          - modelmesh-serving
+          - notebooks
+          - odh-dashboard
+          - odh-model-controller
+          - rest-proxy
+          - rhods-operator
           - trustyai-explainability
           - trustyai-service-operator
-          - data-science-pipelines-operator
-          - codeflare-operator
-          - distributed-workloads
-          - kuberay
-          - multi-cluster-app-dispatcher
-          - text-generation-inference
-          - caikit-tgis-serving
-          - caikit-nlp
-          - caikit
-          - kserve
-          - caikit-tgis-backend
   schedule:
     - cron: '0 0 * * *'
 
