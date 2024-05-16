@@ -1,6 +1,7 @@
 git:
 - name: optima
   automerge: 'yes'
+  ignore: newfile.txt
   src:
     url: https://github.com/red-hat-data-services/rhoai-devops-optima.git
     branch: main
