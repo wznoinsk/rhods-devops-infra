@@ -105,9 +105,9 @@ jobs:
       - name: GitHub Sync to Upstream Repository
         uses: dchourasia/sync-git-branches@main
         with:
-          upstream_repo: "${{ matrix.mapping.src.url }}"
-          upstream_branch: "${{ matrix.mapping.src.branch }}"
-          downstream_repo: "${{ matrix.mapping.dest.url }}"
+          upstream_repo: "${{ matrix.mapping.repo-url }}"
+          upstream_branch: "${{ matrix.mapping.src-branch }}"
+          downstream_repo: "${{ matrix.mapping.repo-url }}"
           downstream_branch: "${{ matrix.release }}"
           token: ${{ steps.app-token.outputs.token }}
           ignore_files: "${{ matrix.mapping.ignore-files }}"
