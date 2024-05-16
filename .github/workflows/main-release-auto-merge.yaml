@@ -102,7 +102,6 @@ jobs:
              echo "$exclusion"
              echo "$exclusion merge=ours" >> .gitattributes
           done
-          sudo apt-get install -y curl
       - name: GitHub Sync to Upstream Repository
         uses: dchourasia/sync-git-branches@main
         with:
