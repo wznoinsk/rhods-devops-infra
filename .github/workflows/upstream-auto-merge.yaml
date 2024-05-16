@@ -41,7 +41,7 @@ permissions:
   id-token: write
 
 env:
-  SOURCE_MAP: "src/config/source_map.yaml"
+  SOURCE_MAP: "src/config/upstream-source-map.yaml"
 jobs:
 
   setup:
