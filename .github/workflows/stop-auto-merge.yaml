@@ -34,6 +34,7 @@ jobs:
         python utils/auto-merge/stop_auto_merge.py --release $RELEASE_TO_BE_REMOVED
         RELEASE_TO_BE_REMOVED=$(cat RELEASE_TO_BE_REMOVED)
         echo "RELEASE_TO_BE_REMOVED=${RELEASE_TO_BE_REMOVED}" >> $GITHUB_OUTPUT
+        rm -rf RELEASE_TO_BE_REMOVED
 
     - name: Extract branch name
       shell: bash
