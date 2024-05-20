@@ -29,11 +29,11 @@ class stop_auto_merge:
     def get_release_to_be_removed(self):
         dates_to_search = []
         release_to_be_removed = ''
-        # if datetime.today().date().weekday() != 4:
-        if datetime.today().date().weekday() != 3:
+        if datetime.today().date().weekday() != 4:
+        # if datetime.today().date().weekday() != 3:
             dates_to_search.append(datetime.today().date())
-        # if datetime.today().date().weekday() == 0:
-        if datetime.today().date().weekday() == 4:
+        if datetime.today().date().weekday() == 0:
+        # if datetime.today().date().weekday() == 4:
             dates_to_search.append(datetime.today().date() - timedelta(days=3))
         codeFreezeDates = self.get_code_freeze_dates()
         for event, dt in codeFreezeDates.items():
@@ -49,7 +49,8 @@ class stop_auto_merge:
         release_map = yaml.load(open('src/config/releases.yaml'))
         if release_to_be_removed:
             print(f'removing {release_to_be_removed} from the config')
-            release_map['releases'].remove(release_to_be_removed)
+            if release_to_be_removed in release_map['releases']:
+                release_map['releases'].remove(release_to_be_removed)
             print('release_map', release_map)
         yaml.dump(release_map, open('src/config/releases.yaml', 'w'))
 
