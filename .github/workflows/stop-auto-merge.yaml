@@ -24,12 +24,15 @@ jobs:
       id: remove_release_from_config
       run: |
         RELEASE_TO_BE_REMOVED=DEFAULT
+        
         if [[ "${{ github.event_name  }}" == "workflow_dispatch" ]]
         then
           RELEASE_TO_BE_REMOVED=${{ github.event.inputs.release }}
         fi
         echo "RELEASE_TO_BE_REMOVED=$RELEASE_TO_BE_REMOVED"
+        echo $RELEASE_TO_BE_REMOVED > RELEASE_TO_BE_REMOVED
         python utils/auto-merge/stop_auto_merge.py --release $RELEASE_TO_BE_REMOVED
+        RELEASE_TO_BE_REMOVED=$(cat RELEASE_TO_BE_REMOVED)
         echo "RELEASE_TO_BE_REMOVED=${RELEASE_TO_BE_REMOVED}" >> $GITHUB_OUTPUT
 
     - name: Extract branch name

@@ -62,4 +62,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     sam = stop_auto_merge()
     release_to_be_removed = args.release if args.release and args.release != 'DEFAULT' else sam.get_release_to_be_removed()
+    with open('RELEASE_TO_BE_REMOVED' ,'w') as RELEASE_TO_BE_REMOVED:
+        RELEASE_TO_BE_REMOVED.write(release_to_be_removed)
     sam.update_release_map(release_to_be_removed)
