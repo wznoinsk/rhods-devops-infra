@@ -29,8 +29,8 @@ on:
           - rhods-operator
           - trustyai-explainability
           - trustyai-service-operator
-  schedule:
-    - cron: '0 0 * * *'
+#  schedule:
+#    - cron: '0 0 * * *'
 
 permissions:
   packages: write
@@ -98,7 +98,7 @@ jobs:
              echo "$exclusion"
              echo "$exclusion merge=ours" >> .gitattributes
           done
-      - name: GitHub Sync to Upstream Repository
+      - name: Main to release gitHub sync
         uses: dchourasia/sync-git-branches@main
         with:
           upstream_repo: "${{ matrix.mapping.repo-url }}"
