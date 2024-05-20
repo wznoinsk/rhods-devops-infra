@@ -58,8 +58,8 @@ class stop_auto_merge:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--release', default='', required=False, help='Release to be removed from the auto-merge config', dest='release')
+    parser.add_argument('--release', default='DEFAULT', required=False, help='Release to be removed from the auto-merge config', dest='release')
     args = parser.parse_args()
     sam = stop_auto_merge()
-    release_to_be_removed = args.release if args.release else sam.get_release_to_be_removed()
+    release_to_be_removed = args.release if args.release and args.release != 'DEFAULT' else sam.get_release_to_be_removed()
     sam.update_release_map(release_to_be_removed)

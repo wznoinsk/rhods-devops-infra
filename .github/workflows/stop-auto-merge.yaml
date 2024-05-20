@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Remove the release from config
       run: |
-        RELEASE_TO_BE_REMOVED=
+        RELEASE_TO_BE_REMOVED=DEFAULT
         if [[ "${{ github.event_name  }}" == "workflow_dispatch" ]]
         then
           RELEASE_TO_BE_REMOVED=${{ github.event.inputs.release }}
