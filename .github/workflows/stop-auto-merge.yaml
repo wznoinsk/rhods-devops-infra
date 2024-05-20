@@ -18,6 +18,8 @@ jobs:
       run: |
         pip install -r utils/auto-merge/requirements.txt
     - name: Remove the release from config
+      env:
+        SMARTSHEET_ACCESS_TOKEN: ${{ secrets.SMARTSHEET_ACCESS_TOKEN }}
       shell: bash
       id: remove_release_from_config
       run: |
