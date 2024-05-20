@@ -27,7 +27,7 @@ jobs:
           RELEASE_TO_BE_REMOVED=${{ github.event.inputs.release }}
         fi
         echo "RELEASE_TO_BE_REMOVED=$RELEASE_TO_BE_REMOVED"
-        python utils/auto-merge/stop_auto_merge.py --release RELEASE_TO_BE_REMOVED
+        python utils/auto-merge/stop_auto_merge.py --release $RELEASE_TO_BE_REMOVED
         echo "branch=${RELEASE_TO_BE_REMOVED:-${RELEASE_TO_BE_REMOVED}}" >> $GITHUB_OUTPUT
 
     - name: Extract branch name
