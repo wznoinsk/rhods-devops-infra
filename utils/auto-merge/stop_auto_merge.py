@@ -1,6 +1,5 @@
 import re
 import json
-import pyyaml
 from datetime import datetime, timedelta
 import smartsheet
 import argparse
