@@ -1,4 +1,4 @@
-name: Stop Auto-Merge
+name: Onboard Release Branches
 
 on:
 #  schedule:
@@ -10,31 +10,31 @@ on:
         required: true
 
 jobs:
-  stop-auto-merge:
+  onboard-release-branches:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Install dependencies
       run: |
         pip install -r utils/auto-merge/requirements.txt
-    - name: Remove the release from config
+    - name: Add the release to config
       env:
         SMARTSHEET_ACCESS_TOKEN: ${{ secrets.SMARTSHEET_ACCESS_TOKEN }}
       shell: bash
       id: remove_release_from_config
       run: |
-        RELEASE_TO_BE_REMOVED=DEFAULT
+        RELEASE_TO_BE_SETUP=DEFAULT
         
         if [[ "${{ github.event_name  }}" == "workflow_dispatch" ]]
         then
-          RELEASE_TO_BE_REMOVED=${{ github.event.inputs.release }}
+          RELEASE_TO_BE_SETUP=${{ github.event.inputs.release }}
         fi
-        echo "RELEASE_TO_BE_REMOVED=$RELEASE_TO_BE_REMOVED"
-        echo $RELEASE_TO_BE_REMOVED > RELEASE_TO_BE_REMOVED
-        python utils/auto-merge/stop_auto_merge.py --release $RELEASE_TO_BE_REMOVED
-        RELEASE_TO_BE_REMOVED=$(cat RELEASE_TO_BE_REMOVED)
-        echo "RELEASE_TO_BE_REMOVED=${RELEASE_TO_BE_REMOVED}" >> $GITHUB_OUTPUT
-        rm -rf RELEASE_TO_BE_REMOVED
+        echo "RELEASE_TO_BE_SETUP=$RELEASE_TO_BE_SETUP"
+        echo $RELEASE_TO_BE_SETUP > RELEASE_TO_BE_SETUP
+        python utils/auto-merge/setup_release_branches.py --release $RELEASE_TO_BE_SETUP
+        RELEASE_TO_BE_SETUP=$(cat RELEASE_TO_BE_SETUP)
+        echo "RELEASE_TO_BE_SETUP=${RELEASE_TO_BE_SETUP}" >> $GITHUB_OUTPUT
+        rm -rf RELEASE_TO_BE_SETUP
 
     - name: Extract branch name
       shell: bash
@@ -45,5 +45,5 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ steps.extract_branch.outputs.branch }}
-        message: "Removing ${{ steps.remove_release_from_config.outputs.RELEASE_TO_BE_REMOVED }} from releases.yaml"
+        message: "Adding ${{ steps.remove_release_from_config.outputs.RELEASE_TO_BE_SETUP }} to releases.yaml"
         repository: red-hat-data-services/rhods-devops-infra

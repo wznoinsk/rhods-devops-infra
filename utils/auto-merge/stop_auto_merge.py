@@ -1,6 +1,5 @@
 import re
 import json
-import pyyaml
 from datetime import datetime, timedelta
 import smartsheet
 import argparse
@@ -16,7 +15,8 @@ class stop_auto_merge:
         column_map = {}
         smart = smartsheet.Smartsheet()
         # response = smart.Sheets.list_sheets()
-        sheed_id = 3025228340193156
+        # sheed_id = 3025228340193156
+        sheed_id = 2157923266416516
         sheet = smart.Sheets.get_sheet(sheed_id)
         for column in sheet.columns:
             column_map[column.title] = column.id
@@ -58,8 +58,10 @@ class stop_auto_merge:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--release', default='', required=False, help='Release to be removed from the auto-merge config', dest='release')
+    parser.add_argument('--release', default='DEFAULT', required=False, help='Release to be removed from the auto-merge config', dest='release')
     args = parser.parse_args()
     sam = stop_auto_merge()
-    release_to_be_removed = args.release if args.release else sam.get_release_to_be_removed()
+    release_to_be_removed = args.release if args.release and args.release != 'DEFAULT' else sam.get_release_to_be_removed()
+    with open('RELEASE_TO_BE_REMOVED' ,'w') as RELEASE_TO_BE_REMOVED:
+        RELEASE_TO_BE_REMOVED.write(release_to_be_removed)
     sam.update_release_map(release_to_be_removed)
