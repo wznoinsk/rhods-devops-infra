@@ -1,4 +1,4 @@
-name: Auto-Merge - ODH to RHODS
+name: ODH to RHODS - Auto-Merge
 
 on:
   workflow_dispatch:
@@ -41,7 +41,7 @@ permissions:
   id-token: write
 
 env:
-  SOURCE_MAP: "src/config/source_map.yaml"
+  SOURCE_MAP: "src/config/upstream-source-map.yaml"
 jobs:
 
   setup:

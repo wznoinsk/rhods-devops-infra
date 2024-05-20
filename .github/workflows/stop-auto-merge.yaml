@@ -1,0 +1,35 @@
+name: Stop Auto-Merge
+
+on:
+  schedule:
+    - cron:  '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      release:
+        type: string
+        required: true
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Remove the release from config
+      run: |
+        RELEASE_TO_BE_REMOVED=
+        if [[ "${{ github.event_name  }}" == "workflow_dispatch" ]]
+        then
+          RELEASE_TO_BE_REMOVED=${{ github.event.inputs.release }}
+        fi
+        echo "RELEASE_TO_BE_REMOVED=$RELEASE_TO_BE_REMOVED"
+        python utils/auto-merge/stop_auto_merge.py --release RELEASE_TO_BE_REMOVED
+
+
+      shell: bash
+    - name: Commit and push changes to main branch
+      uses: actions-js/push@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+        message: "Update rhoai-disconnected-helper.sh script"
+        repository: red-hat-data-services/rhoai-disconnected-install-helper

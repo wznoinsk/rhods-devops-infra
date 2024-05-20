@@ -1,4 +1,4 @@
-name: Auto-Merge - Main to Release
+name: Main to Release - Auto-Merge
 
 on:
   workflow_dispatch:
@@ -9,30 +9,26 @@ on:
         options:
           - all
           - optima
-          - rhods-operator
-          - opendatahub-operator
-          - odh-manifests
-          - odh-dashboard
+          - argo-workflows
+          - codeflare-operator
+          - data-science-pipelines
+          - data-science-pipelines-operator
+          - data-science-pipelines-tekton
+          - kserve
           - kubeflow
-          - modelmesh-serving
-          - odh-model-controller
-          - rest-proxy
+          - kuberay
+          - kueue
+          - ml-metadata
           - modelmesh
           - modelmesh-runtime-adapter
-          - data-science-pipelines
+          - modelmesh-serving
+          - notebooks
+          - odh-dashboard
+          - odh-model-controller
+          - rest-proxy
+          - rhods-operator
           - trustyai-explainability
           - trustyai-service-operator
-          - data-science-pipelines-operator
-          - codeflare-operator
-          - distributed-workloads
-          - kuberay
-          - multi-cluster-app-dispatcher
-          - text-generation-inference
-          - caikit-tgis-serving
-          - caikit-nlp
-          - caikit
-          - kserve
-          - caikit-tgis-backend
   schedule:
     - cron: '0 0 * * *'
 
@@ -43,12 +39,14 @@ permissions:
 
 env:
   SOURCE_MAP: "src/config/main-release-source-map.yaml"
+  RELEASES: "src/config/releases.yaml"
 jobs:
 
   setup:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.matrix.outputs.value }}
+      releases: ${{ steps.matrix.outputs.releases }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -68,7 +66,13 @@ jobs:
             echo "No valid repos available for auto-merge"
             exit 1
           fi
+          releases=$(yq -o json $RELEASES)
+          releases=$(echo $releases | jq -r '.releases' | sed 's/ //g' | awk NF=NF RS= OFS=)
+          echo "releases = $releases"
+          echo "value = $value"
           echo "::set-output name=value::$value"
+          echo "::set-output name=releases::$releases"
+
   build:
     needs: [ setup ]
     runs-on: ubuntu-latest
@@ -76,6 +80,7 @@ jobs:
       fail-fast: false
       matrix:
         mapping: ${{ fromJSON(needs.setup.outputs.matrix) }}
+        release: ${{ fromJSON(needs.setup.outputs.releases) }}
     steps:
       - name: Generate github-app token
         id: app-token
@@ -96,10 +101,10 @@ jobs:
       - name: GitHub Sync to Upstream Repository
         uses: dchourasia/sync-git-branches@main
         with:
-          upstream_repo: "${{ matrix.mapping.src.url }}"
-          upstream_branch: "${{ matrix.mapping.src.branch }}"
-          downstream_repo: "${{ matrix.mapping.dest.url }}"
-          downstream_branch: "${{ matrix.mapping.dest.branch }}"
+          upstream_repo: "${{ matrix.mapping.repo-url }}"
+          upstream_branch: "${{ matrix.mapping.src-branch }}"
+          downstream_repo: "${{ matrix.mapping.repo-url }}"
+          downstream_branch: "${{ matrix.release }}"
           token: ${{ steps.app-token.outputs.token }}
-          ignore_files: "${{ matrix.mapping.ignore }}"
+          ignore_files: "${{ matrix.mapping.ignore-files }}"
           merge_args: "--no-edit"
