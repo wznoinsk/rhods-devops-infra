@@ -1,4 +1,4 @@
-name: ODH to RHODS - Auto-Merge
+name: Auto-Merge - ODH to RHODS
 
 on:
   workflow_dispatch:
