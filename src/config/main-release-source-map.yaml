@@ -1,8 +1,4 @@
 git:
-- name: optima
-  automerge: 'yes'
-  repo-url: https://github.com/red-hat-data-services/rhoai-devops-optima.git
-  ignore-files: newfile.txt
 - name: odh-dashboard
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/odh-dashboard.git
@@ -64,3 +60,6 @@ git:
 - name: data-science-pipelines-tekton
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/data-science-pipelines-tekton.git
+- name: training-operator
+  automerge: 'yes'
+  repo-url: https://github.com/red-hat-data-services/training-operator.git
