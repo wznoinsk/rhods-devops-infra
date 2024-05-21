@@ -30,8 +30,8 @@ on:
           - training-operator
           - trustyai-explainability
           - trustyai-service-operator
-#  schedule:
-#    - cron: '0 0 * * *'
+  schedule:
+    - cron: '0 0 * * *'
 
 permissions:
   packages: write
@@ -100,7 +100,7 @@ jobs:
              echo "$exclusion merge=ours" >> .gitattributes
           done
       - name: Main to release gitHub sync
-        uses: dchourasia/sync-git-branches@main
+        uses: dchourasia/sync-git-branches@1.1
         with:
           upstream_repo: "${{ matrix.mapping.repo-url }}"
           upstream_branch: "${{ matrix.mapping.src-branch }}"
