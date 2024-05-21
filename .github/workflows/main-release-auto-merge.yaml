@@ -27,6 +27,7 @@ on:
           - odh-model-controller
           - rest-proxy
           - rhods-operator
+          - training-operator
           - trustyai-explainability
           - trustyai-service-operator
 #  schedule:
