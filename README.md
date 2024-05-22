@@ -1,12 +1,12 @@
 RHOAI-DevOps-Infra
 ====================
 
-Downstream main to rhoai-x.y Auto-Merge Workflow
+Downstream main to rhoai-x.y Auto-Merge Infra
 ----------
-* The workflow will
-   * On Sprint Start - Automatically create rhoai-x.y branches for all the repos and enable the auto-merge
-   * Till code-freeze (RC day) - daily sync from main to rhoai-x.y
-   * On code-freeze (RC day) - disable the auto-merge from main to rhoai-x.y 
+* The infra is responsbile for following tasks:
+   * **On Sprint Start** - Automatically create rhoai-x.y branches for all the repos and enable the auto-merge
+   * **Till code-freeze (RC day)** - daily sync from main to rhoai-x.y
+   * **On code-freeze (RC day)** - disable the auto-merge from main to rhoai-x.y 
 * Execute each day at UTC 1:0 from the [github workflow](https://github.com/red-hat-data-services/rhods-devops-infra/blob/main/.github/workflows/main-release-auto-merge.yaml)
 * Daily syncs the changes from downstream main to rhoai-x.y branch based on the configuration [auto-merge config yaml](https://github.com/red-hat-data-services/rhods-devops-infra/blob/main/src/config/main-release-source-map.yaml)
 * It is by default enabled for all the repos, but can be disabled using the same config file
@@ -26,7 +26,7 @@ Enable Downstream main to rhoai-x.y Auto-Merge for a repo
    4. Select the repo name from dropdown
    5. Hit the 'Run Workflow' button
 
-Upstream to Downstream Auto-Merge Workflow
+Upstream to Downstream Auto-Merge Infra
 ----------
 * Execute each day at UTC 0:0 from the [github workflow](https://github.com/red-hat-data-services/rhods-devops-infra/blob/main/.github/workflows/upstream-auto-merge.yaml)
 * syncs and merges changes from upstream repos to downstream repos based on the [auto-merge config yaml](https://github.com/red-hat-data-services/rhods-devops-infra/blob/main/src/config/upstream-source-map.yaml)
