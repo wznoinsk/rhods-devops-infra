@@ -217,7 +217,7 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/openvino_model_server.git
     branch: 2023.1-release
-- name: fms-hf-tuning
+- name: fms-hf-tuning-dev
   automerge: 'yes'
   src:
     url: https://github.com/foundation-model-stack/fms-hf-tuning.git
@@ -225,6 +225,14 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/fms-hf-tuning.git
     branch: main
+- name: fms-hf-tuning-release
+  automerge: 'yes'
+  src:
+    url: https://github.com/foundation-model-stack/fms-hf-tuning.git
+    branch: release
+  dest:
+    url: https://github.com/red-hat-data-services/fms-hf-tuning.git
+    branch: release
 - name: vllm
   automerge: 'no'
   src:
