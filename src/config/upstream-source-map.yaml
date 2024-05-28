@@ -112,7 +112,7 @@ git:
     url: https://github.com/red-hat-data-services/trustyai-service-operator.git
     branch: main
 - name: codeflare-operator
-  automerge: 'no'
+  automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/codeflare-operator.git
     branch: main
