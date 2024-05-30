@@ -19,9 +19,10 @@ on:
           - modelmesh
           - modelmesh-runtime-adapter
           - data-science-pipelines
+          - data-science-pipelines-tekton
+          - data-science-pipelines-operator
           - trustyai-explainability
           - trustyai-service-operator
-          - data-science-pipelines-operator
           - codeflare-operator
           - distributed-workloads
           - kuberay
