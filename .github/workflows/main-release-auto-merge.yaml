@@ -30,6 +30,7 @@ on:
           - training-operator
           - trustyai-explainability
           - trustyai-service-operator
+          - must-gather
   schedule:
     - cron: '0 1 * * *'
 
