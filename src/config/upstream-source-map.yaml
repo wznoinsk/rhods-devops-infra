@@ -95,8 +95,18 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/trustyai-service-operator.git
     branch: main
-- name: codeflare-operator
+- name: codeflare-upstream
   automerge: 'yes'
+  ignore-files: codeflare-stack/base/params.env
+  src:
+    url: https://github.com/project-codeflare/codeflare-operator.git
+    branch: main
+  dest:
+    url: https://github.com/opendatahub-io/codeflare-operator.git
+    branch: main
+- name: codeflare-downstream
+  automerge: 'yes'
+  ignore-files: codeflare-stack/base/params.env
   src:
     url: https://github.com/opendatahub-io/codeflare-operator.git
     branch: main
@@ -224,22 +234,4 @@ git:
     branch: release
   dest:
     url: https://github.com/red-hat-data-services/vllm.git
-    branch: main
-- name: codeflare-upstream
-  automerge: 'yes'
-  ignore-files: codeflare-stack/base/params.env
-  src:
-    url: https://github.com/project-codeflare/codeflare-operator.git
-    branch: main
-  dest:
-    url: https://github.com/opendatahub-io/codeflare-operator.git
-    branch: main
-- name: codeflare-downstream
-  automerge: 'yes'
-  ignore-files: codeflare-stack/base/params.env
-  src:
-    url: https://github.com/opendatahub-io/codeflare-operator.git
-    branch: main
-  dest:
-    url: https://github.com/red-hat-data-services/codeflare-operator.git
     branch: main
