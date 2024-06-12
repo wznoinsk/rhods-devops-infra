@@ -93,7 +93,7 @@ jobs:
         uses: getsentry/action-github-app-token@v2
         with:
           app_id: ${{ secrets[format('{0}_DEVOPS_APP_ID', steps.evaluate-dest-org.outputs.DEST_ORG)] }}
-          private_key: ${{ secrets[format('{0}DEVOPS_APP_PRIVATE_KEY', steps.evaluate-dest-org.outputs.DEST_ORG)] }}
+          private_key: ${{ secrets[format('{0}_DEVOPS_APP_PRIVATE_KEY', steps.evaluate-dest-org.outputs.DEST_ORG)] }}
       - id: git-configuration
         name: Git Configuration
         run: |
