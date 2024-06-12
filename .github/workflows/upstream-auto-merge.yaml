@@ -34,6 +34,8 @@ on:
           - kserve
           - caikit-tgis-backend
           - vllm
+          - codeflare-upstream
+          - codeflare-downstream
   schedule:
     - cron: '0 0 * * *'
 
