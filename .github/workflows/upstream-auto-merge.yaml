@@ -113,4 +113,3 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           ignore_files: "${{ matrix.mapping.ignore }}"
           merge_args: "--no-edit"
-          push_args: "--force"
