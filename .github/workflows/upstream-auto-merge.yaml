@@ -8,33 +8,41 @@ on:
         description: select repositories
         options:
           - all
-          - rhods-operator
-          - opendatahub-operator
-          - odh-manifests
-          - odh-dashboard
+          - caikit
+          - caikit-nlp
+          - caikit-tgis-backend
+          - caikit-tgis-serving
+          - codeflare-downstream
+          - codeflare-upstream
+          - data-science-pipelines
+          - data-science-pipelines-operator
+          - data-science-pipelines-tekton
+          - distributed-workloads
+          - fms-hf-tuning-dev
+          - fms-hf-tuning-release
+          - kserve
           - kubeflow
-          - modelmesh-serving
-          - odh-model-controller
-          - rest-proxy
+          - kuberay
           - modelmesh
           - modelmesh-runtime-adapter
-          - data-science-pipelines
-          - data-science-pipelines-tekton
-          - data-science-pipelines-operator
+          - modelmesh-serving
+          - multi-cluster-app-dispatcher
+          - odh-dashboard
+          - odh-manifests
+          - odh-model-controller
+          - opendatahub-operator
+          - rest-proxy
+          - rhods-operator
+          - text-generation-inference
           - trustyai-explainability
           - trustyai-service-operator
-          - codeflare-upstream
-          - codeflare-downstream
-          - distributed-workloads
-          - kuberay
-          - multi-cluster-app-dispatcher
-          - text-generation-inference
-          - caikit-tgis-serving
-          - caikit-nlp
-          - caikit
-          - kserve
-          - caikit-tgis-backend
           - vllm
+  workflow_call:
+    inputs:
+      repositories:
+        required: true
+        type: string
+        description: Repository to sync, chosen from the list
   schedule:
     - cron: '0 */6 * * *'
 
@@ -58,7 +66,7 @@ jobs:
         run: |
           value=$(yq -o json $SOURCE_MAP)
           value=$(echo $value | jq -r '.git' | jq -c 'map(select(.automerge == "yes"))' | sed 's/ //g' | awk NF=NF RS= OFS=)
-          if [[ "${{ github.event_name  }}" == "workflow_dispatch" ]] && [[ "${{ github.event.inputs.repositories }}" != "all" ]]
+          if ([[ "${{ github.event_name  }}" == "workflow_dispatch" ]] || [[ "${{ github.event_name  }}" == "workflow_call" ]]) && [[ "${{ github.event.inputs.repositories }}" != "all" ]]
           then
             value=$(echo $value | jq -c 'map(select(.name == "${{ github.event.inputs.repositories }}"))' | sed 's/ //g' | awk NF=NF RS= OFS=)
           fi
