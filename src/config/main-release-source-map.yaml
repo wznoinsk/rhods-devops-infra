@@ -11,6 +11,7 @@ git:
 - name: odh-model-controller
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/odh-model-controller.git
+  ignore-files: config/base/params.env  
 - name: rest-proxy
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/rest-proxy.git
