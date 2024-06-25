@@ -25,6 +25,7 @@ git:
     branch: main
 - name: odh-model-controller
   automerge: 'yes'
+  ignore-files: config/base/params.env 
   src:
     url: https://github.com/opendatahub-io/odh-model-controller.git
     branch: release-0.12.0
