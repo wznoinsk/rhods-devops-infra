@@ -1,5 +1,5 @@
 import re
-import json
+import os
 from datetime import datetime, timedelta
 import smartsheet
 import argparse
@@ -15,8 +15,7 @@ class stop_auto_merge:
         column_map = {}
         smart = smartsheet.Smartsheet()
         # response = smart.Sheets.list_sheets()
-        sheed_id = 3025228340193156
-        # sheed_id = 2157923266416516
+        sheed_id = os.getenv('BUILD_SHEET_ID')
         sheet = smart.Sheets.get_sheet(sheed_id)
         for column in sheet.columns:
             column_map[column.title] = column.id

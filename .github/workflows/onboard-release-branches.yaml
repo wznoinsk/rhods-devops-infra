@@ -20,6 +20,7 @@ jobs:
     - name: Add the release to config
       env:
         SMARTSHEET_ACCESS_TOKEN: ${{ secrets.SMARTSHEET_ACCESS_TOKEN }}
+        BUILD_SHEET_ID:  ${{ secrets.BUILD_SHEET_ID }}
       shell: bash
       id: remove_release_from_config
       run: |
