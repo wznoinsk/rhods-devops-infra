@@ -98,7 +98,7 @@ git:
     branch: main
 - name: codeflare-upstream
   automerge: 'yes'
-  ignore-files: codeflare-stack/base/params.env
+  ignore-files: .github/workflows/e2e_tests.yaml
   src:
     url: https://github.com/project-codeflare/codeflare-operator.git
     branch: main
@@ -107,7 +107,6 @@ git:
     branch: main
 - name: codeflare-downstream
   automerge: 'yes'
-  ignore-files: codeflare-stack/base/params.env
   src:
     url: https://github.com/opendatahub-io/codeflare-operator.git
     branch: main
