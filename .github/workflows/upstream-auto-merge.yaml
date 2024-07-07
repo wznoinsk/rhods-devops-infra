@@ -44,7 +44,7 @@ on:
         type: string
         description: Repository to sync, chosen from the list
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 0 * * *'
 
 permissions:
   packages: write
@@ -83,6 +83,7 @@ jobs:
     needs: [ setup ]
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 1
       fail-fast: false
       matrix:
         mapping: ${{ fromJSON(needs.setup.outputs.matrix) }}
