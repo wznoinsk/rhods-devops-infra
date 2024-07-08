@@ -67,3 +67,6 @@ git:
 - name: must-gather
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/must-gather.git
+- name: caikit-nlp
+  automerge: 'yes'
+  repo-url: https://github.com/red-hat-data-services/caikit-nlp.git
