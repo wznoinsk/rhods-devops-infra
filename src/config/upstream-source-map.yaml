@@ -235,3 +235,27 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/vllm.git
     branch: main
+- name: caikit-upstream
+  automerge: 'yes'
+  src:
+    url: https://github.com/caikit/caikit.git
+    branch: main
+  dest:
+    url: https://github.com/opendatahub-io/caikit.git
+    branch: main
+- name: caikit-nlp-upstream
+  automerge: 'yes'
+  src:
+    url: https://github.com/caikit/caikit-nlp.git
+    branch: main
+  dest:
+    url: https://github.com/opendatahub-io/caikit-nlp.git
+    branch: main
+- name: caikit-tgis-backend-upstream
+  automerge: 'yes'
+  src:
+    url: https://github.com/caikit/caikit-tgis-backend.git
+    branch: main
+  dest:
+    url: https://github.com/opendatahub-io/caikit-tgis-backend.git
+    branch: main
