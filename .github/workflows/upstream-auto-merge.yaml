@@ -8,8 +8,11 @@ on:
         description: select repositories
         options:
           - all
+          - caikit-upstream
           - caikit
+          - caikit-nlp-upstream
           - caikit-nlp
+          - caikit-tgis-backend-upstream
           - caikit-tgis-backend
           - caikit-tgis-serving
           - codeflare-downstream
