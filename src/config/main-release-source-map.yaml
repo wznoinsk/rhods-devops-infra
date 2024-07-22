@@ -33,6 +33,7 @@ git:
 - name: data-science-pipelines-operator
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/data-science-pipelines-operator.git
+  ignore-files: config/base/params.env
 - name: kuberay
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/kuberay.git
