@@ -22,7 +22,7 @@ class stop_auto_merge:
         # print(column_map)
 
         # process existing data
-        codeFreezeDates = {row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() for row in sheet.rows if row.cells[1].value and ('code freeze' in row.cells[1].value.lower() or 'codefreeze' in row.cells[1].value.lower() or 'code-freeze' in row.cells[1].value.lower()) }
+        codeFreezeDates = {row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() for row in sheet.rows if row.cells[1].value and ('code freeze' in str(row.cells[1].value).lower() or 'codefreeze' in str(row.cells[1].value).lower() or 'code-freeze' in str(row.cells[1].value).lower()) }
         print('codeFreezeDates', codeFreezeDates)
         return codeFreezeDates
     def get_release_to_be_removed(self):

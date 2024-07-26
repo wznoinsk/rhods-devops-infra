@@ -23,7 +23,7 @@ class setup_release_branches:
         # print(column_map)
 
         # process existing data
-        sprintStartDates = {row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() for row in sheet.rows if row.cells[1].value and ('sprint starts' in row.cells[1].value.lower() or 'sprintstarts' in row.cells[1].value.lower() or 'sprint-starts' in row.cells[1].value.lower()) }
+        sprintStartDates = {row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() for row in sheet.rows if row.cells[1].value and ('sprint starts' in str(row.cells[1].value).lower() or 'sprintstarts' in str(row.cells[1].value).lower() or 'sprint-starts' in str(row.cells[1].value).lower()) }
         print('sprintStartDates', sprintStartDates)
         return sprintStartDates
     def get_release_to_be_setup(self):
