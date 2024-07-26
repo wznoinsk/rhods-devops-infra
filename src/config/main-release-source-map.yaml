@@ -46,7 +46,7 @@ git:
 - name: kserve
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/kserve.git
-  ignore-files: config/overlays/odh/params.env
+  ignore-files: 'config/overlays/odh/params.env,.tekton/*'
 - name: notebooks
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/notebooks.git
