@@ -74,3 +74,6 @@ git:
 - name: rhoai-additional-images
   automerge: 'no'
   repo-url: https://github.com/red-hat-data-services/rhoai-additional-images.git
+- name: text-generation-inference
+  automerge: 'yes'
+  repo-url: https://github.com/red-hat-data-services/text-generation-inference.git
