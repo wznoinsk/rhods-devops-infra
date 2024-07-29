@@ -29,7 +29,9 @@ on:
           - training-operator
           - trustyai-explainability
           - trustyai-service-operator
+          - text-generation-inference
           - must-gather
+              
   schedule:
     - cron: '0 1 * * *'
 
