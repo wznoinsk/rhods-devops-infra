@@ -71,6 +71,7 @@ git:
 - name: caikit-nlp
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/caikit-nlp.git
+  ignore-files: .tekton/*
 - name: rhoai-additional-images
   automerge: 'no'
   repo-url: https://github.com/red-hat-data-services/rhoai-additional-images.git
