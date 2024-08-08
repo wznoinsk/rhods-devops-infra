@@ -1,5 +1,5 @@
 import re
-from termcolor import colored
+import util
 
 def validate_release_pattern(release):
     """
@@ -63,9 +63,9 @@ def validate_config_yaml(config):
               
       return True
     except (ValueError, TypeError) as e:
-        print(colored(f"Validation Failed for '{filename}'.", "light_red"))
-        print()
-        print(colored(e, "red"))
+        util.colored_print(f"Validation Failed for '{filename}'.", "light_red")
+        print("\n")
+        util.colored_print(e, "red")
         exit(1)
           
     
@@ -110,9 +110,9 @@ def validate_releases_yaml(rhoai_releases):
       
       return True
     except (ValueError, TypeError) as e:
-        print(colored(f"Validation Failed for '{filename}'.", "light_red"))
-        print()
-        print(colored(e, "red"))
+        util.colored_print(f"Validation Failed for '{filename}'.", "light_red")
+        print("\n")
+        util.colored_print(e, "red")
         exit(1)
     
   
