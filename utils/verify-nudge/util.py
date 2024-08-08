@@ -4,8 +4,36 @@ import subprocess
 import requests
 import validator
 import yaml
-from termcolor import colored
 
+
+
+def colored_print(text, color, isBold=False):
+    """
+    Prints a message in a specified color and optional bold formatting.
+
+    Args:
+        - message (str): The message to print.
+        - color (str): The color of the text. E.g., 'red', 'green', 'blue', etc.
+        - isBold (bool): If True, makes the text bold. Default is False.
+    """
+    colors = {
+        'black': '30',
+        'red': '31',
+        'green': '32',
+        'yellow': '33',
+        'blue': '34',
+        'magenta': '35',
+        'cyan': '36',
+        'white': '37',
+        'reset': '0'
+    }
+    
+    color_code = colors.get(color, '37')
+    bold_code = '1' if isBold else '0'
+    
+    print(f"\033[{bold_code};{color_code}m{text}\033[0m")
+    
+    
 
 def download_file(filename, url):
     """
@@ -48,9 +76,9 @@ def download_file(filename, url):
         return file_path
 
     except (requests.exceptions.RequestException, Exception) as e:
-        print(colored(f"An unexpected error occurred while downloading '{filename}' from url '{url}'.", "light_red"))
-        print()
-        print(colored(e, "red"))
+        colored_print(f"An unexpected error occurred while downloading '{filename}' from url '{url}'.", "light_red")
+        print("\n")
+        colored_print(e, "red")
         exit(1)
 
 
@@ -71,14 +99,14 @@ def remove_file(filename):
     try:
         os.remove(filename)
     except OSError as e:
-        print(colored(f"File system error while deleting file '{filename}'.", "light_red"))
-        print()
-        print(colored(e, "red"))
+        colored_print(f"File system error while deleting file '{filename}'.", "light_red")
+        print("\n")
+        colored_print(e, "red")
         exit(1)
     except Exception as e:
-        print(colored(f"An unexpected error occurred while deleting file '{filename}'.", "light_red"))
-        print()
-        print(colored(e, "red"))
+        colored_print(f"An unexpected error occurred while deleting file '{filename}'.", "light_red")
+        print("\n")
+        colored_print(e, "red")
         exit(1)
 
 
@@ -107,19 +135,19 @@ def parse_yaml(file_path):
             return yaml.safe_load(file)
 
     except yaml.YAMLError as e:
-        print(colored(f"YAML error occured while parsing '{file_path}'.", "light_red"))
-        print()
-        print(colored(e, "red"))
+        colored_print(f"YAML error occured while parsing '{file_path}'.", "light_red")
+        print("\n")
+        colored_print(e, "red")
         exit(1)
     except FileNotFoundError as e:
-        print(colored(f"Unable to parse '{file_path}'. File not found!", "light_red"))
-        print()
-        print(colored(e, "red"))
+        colored_print(f"Unable to parse '{file_path}'. File not found!", "light_red")
+        print("\n")
+        colored_print(e, "red")
         exit(1)
     except Exception as e:
-        print(colored(f"An unexpected error occurred while parsing '{file_path}'.", "light_red"))
-        print()
-        print(colored(e, "red"))
+        colored_print(f"An unexpected error occurred while parsing '{file_path}'.", "light_red")
+        print("\n")
+        colored_print(e, "red")
         exit(1)
 
 
@@ -159,9 +187,9 @@ def parse_nudged_file(file_path):
         return params_list
         
     except Exception as e:
-        print(colored(f"An error occured while reading the nudged file '{file_path}'", "light_red"))
-        print()
-        print(colored(e, "red"))
+        colored_print(f"An error occured while reading the nudged file '{file_path}'", "light_red")
+        print("\n")
+        colored_print(e, "red")
         exit(1)
     
 
@@ -199,15 +227,15 @@ def extract_nudge_details(config, nudged_filename, params_env):
             else:
                 raise Exception("Error: The Image reference doesn't have SHA Digest.")
         else:
-            print(colored(f"'[{component_name}]' is not in verify-components list. Skipping nudge verification! ", "yellow"))
-            print()
+            colored_print(f"'[{component_name}]' is not in verify-components list. Skipping nudge verification! ", "yellow")
+            print("\n")
         
         return component_name, image_name, image_sha
     
     except Exception as e:
-        print(colored(f"Invalid '{nudged_filename}': Unable to extract SHA Digest from '{params_env}'.", "light_red"))
-        print()
-        print(colored(e, "red"))
+        colored_print(f"Invalid '{nudged_filename}': Unable to extract SHA Digest from '{params_env}'.", "light_red")
+        print("\n")
+        colored_print(e, "red")
         exit(1)
         
 
@@ -236,9 +264,9 @@ def get_quay_image_sha_using_skopeo(image_name, tag):
         )
         return result.stdout.strip()  # Remove any leading/trailing whitespace
     except (subprocess.CalledProcessError, Exception) as e:
-        print(colored(f"An unexpected error occurred while executing command: '{command}'", "light_red"))
-        print()
-        print(colored(e, "red"))
+        colored_print(f"An unexpected error occurred while executing command: '{command}'", "light_red")
+        print("\n")
+        colored_print(e, "red")
         exit(1)
 
 
@@ -293,9 +321,9 @@ def get_quay_image_sha(image_name, image_tag):
         raise Exception(f"Error: Tag '{image_tag}' not found in repository '{image_name}'")
 
     except (requests.exceptions.RequestException, Exception) as e:
-        print(colored(f"An error occured while fetching image sha for '{image_name}:{image_tag}'", "light_red"))
-        print()
-        print(colored(e, "red"))
+        colored_print(f"An error occured while fetching image sha for '{image_name}:{image_tag}'", "light_red")
+        print("\n")
+        colored_print(e, "red")
         exit(1)
         
         
@@ -345,7 +373,7 @@ def get_rhoai_releases():
         # validate RHOAI release pattern
         for release in rhoai_releases['releases']:
             if not validator.validate_release_pattern(release):
-                print(colored(f"ValueError: Invalid RHOAI release '{release}' found in the passed argument.", "red"))
+                colored_print(f"ValueError: Invalid RHOAI release '{release}' found in the passed argument.", "red")
                 exit(1)
     else:
         filename = "releases.yaml"
@@ -450,10 +478,10 @@ def verify_nudge(release, config):
             else:
                 color = 'green'
                 
-            print(colored(f"Component Name  : {component_name}", color))
-            print(colored(f"Image Name      : {image_name}", color))
-            print(colored(f"Image SHA       : {image_sha.split(':')[1]}", color))
-            print(colored(f"Quay  SHA       : {quay_sha.split(':')[1]}", color))
-            print()
+            colored_print(f"Component Name  : {component_name}", color)
+            colored_print(f"Image Name      : {image_name}", color)
+            colored_print(f"Image SHA       : {image_sha.split(':')[1]}", color)
+            colored_print(f"Quay  SHA       : {quay_sha.split(':')[1]}", color)
+            print("\n")
      
     return mismatch_found

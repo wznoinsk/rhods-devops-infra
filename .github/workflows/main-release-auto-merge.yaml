@@ -111,3 +111,10 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           ignore_files: "${{ matrix.mapping.ignore-files }}"
           merge_args: "--no-edit"
+
+      - name: Slack Notification
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_MESSAGE: ':red-warning: Image Digest Mismatch Found!'
+          SLACK_WEBHOOK: ${{ secrets.RHOAI_DEVOPS_SLACK_WEBHOOK }}

@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       rhoai-releases:
-        description: 'Comma-separated list of RHOAI releases, e.g., "rhoai-2.11" or "rhoai-2.11,rhoai-2.12".'
+        description: 'Comma-separated RHOAI releases. Leave empty to verify all active releases.'
         required: false
 
 jobs:
-  setup:
+  verify-nudges:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python environment
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'  # Specify the Python version you need
+          python-version: '3.10.13'  # Specify the Python version you need
 
       - name: Install pipenv
         run: |
@@ -31,4 +31,13 @@ jobs:
         run: cd utils/verify-nudge && pipenv install --ignore-pipfile
 
       - name: Execute main.py
-        run: pipenv run python main.py
+        env:
+          QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
+        run: cd utils/verify-nudge && pipenv run python main.py
+
+      - name: Slack Notification
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_MESSAGE: ':red-warning: Image Digest Mismatch Found!'
+          SLACK_WEBHOOK: ${{ secrets.RHOAI_DEVOPS_SLACK_WEBHOOK }}

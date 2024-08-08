@@ -48,3 +48,10 @@ jobs:
         branch: ${{ steps.extract_branch.outputs.branch }}
         message: "Adding ${{ steps.remove_release_from_config.outputs.RELEASE_TO_BE_SETUP }} to releases.yaml"
         repository: red-hat-data-services/rhods-devops-infra
+
+    - name: Slack Notification
+      if: ${{ failure() }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_MESSAGE: ':red-warning: Image Digest Mismatch Found!'
+        SLACK_WEBHOOK: ${{ secrets.RHOAI_DEVOPS_SLACK_WEBHOOK }}
