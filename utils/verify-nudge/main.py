@@ -30,10 +30,12 @@ def main():
                         util.colored_print(f"'[{config.get('name')}]' nudge started in release '{release}'. Skipping nudge verification! ", "yellow")
                         print("\n")
                         continue
-                else:
-                    mismatch_found = util.verify_nudge(release, config)
+                
+                if util.verify_nudge(release, config):
+                    mismatch_found = True
 
     if mismatch_found:
+        util.colored_print("Mismatch Found. Sending Slack Notification! ", "red")
         exit(1)
 
 
