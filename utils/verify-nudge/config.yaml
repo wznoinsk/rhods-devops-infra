@@ -1,0 +1,8 @@
+- name: kserve
+  repo-url: https://github.com/red-hat-data-services/kserve.git
+  nudged-file-path: config/overlays/odh/params.env
+- name: odh-model-controller
+  repo-url: https://github.com/red-hat-data-services/odh-model-controller.git
+  nudged-file-path: config/base/params.env
+  verify-components:
+    - caikit-standalone-image

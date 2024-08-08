@@ -1,0 +1,34 @@
+name: Verify Nudges
+
+on:
+  schedule:
+    - cron: '30 2 * * *'  # Runs at 9 AM IST (2:30 AM UTC)
+  workflow_dispatch:
+    inputs:
+      rhoai-releases:
+        description: 'Comma-separated list of RHOAI releases, e.g., "rhoai-2.11" or "rhoai-2.11,rhoai-2.12".'
+        required: false
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'  # Specify the Python version you need
+
+      - name: Install pipenv
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv
+
+      - name: Install dependencies from Pipfile.lock
+        run: cd utils/verify-nudge && pipenv install --ignore-pipfile
+
+      - name: Execute main.py
+        run: pipenv run python main.py
