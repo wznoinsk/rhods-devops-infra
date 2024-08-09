@@ -440,12 +440,13 @@ def is_component_onboarded(release, onboarded_since):
 def verify_nudge(release, config):
     """
     Verifies the integrity of nudge files by comparing the SHA values of images from 
-    the nudged file against those in the Quay repository.
-    
+    the nudged file against those in the Quay repository. Also checks if the image is 
+    from the 'quay.io/modh' repository.
+
     Args:
         - release (str): The release version for which the nudge file should be verified.
         - config (dict): Configuration details including the name and URL paths necessary 
-                       for downloading and verifying the nudged file.
+                         for downloading and verifying the nudged file.
 
     Returns:
         - bool: True if any mismatch between the SHAs is found, False otherwise.
@@ -468,7 +469,7 @@ def verify_nudge(release, config):
         # Extracting details from the nudged file
         component_name, image_name, image_sha = extract_nudge_details(config, nudged_filename, param)
             
-        if image_name:
+        if image_name and "quay.io/modh" in image_name:
             # Fetch sha from quay
             quay_sha = get_quay_image_sha(image_name, "rhoai-2.12")
 
@@ -483,5 +484,11 @@ def verify_nudge(release, config):
             colored_print(f"Image SHA       : {image_sha.split(':')[1]}", color)
             colored_print(f"Quay  SHA       : {quay_sha.split(':')[1]}", color)
             print("\n")
+        else:
+            colored_print(f"ValueError: Invalid Image reference found in '{nudged_file_url}'.", "light_red")
+            print("\n")
+            colored_print(f"Image '{image_name}' is not from 'modh' quay repo!", "red")
+            exit(1)
+            
      
     return mismatch_found
