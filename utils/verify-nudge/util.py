@@ -476,26 +476,27 @@ def verify_nudge(release, config):
         # Extracting details from the nudged file
         component_name, image_name, image_sha = extract_nudge_details(config, nudged_filename, param)
             
-        if image_name and "quay.io/modh" in image_name:
-            # Fetch sha from quay
-            quay_sha = get_quay_image_sha(image_name, "rhoai-2.12")
+        if image_name:
+            if "quay.io/modh" in image_name:
+                # Fetch sha from quay
+                quay_sha = get_quay_image_sha(image_name, "rhoai-2.12")
 
-            if quay_sha != image_sha:
-                color = 'red'
-                mismatch_found = True
+                if quay_sha != image_sha:
+                    color = 'red'
+                    mismatch_found = True
+                else:
+                    color = 'green'
+                    
+                colored_print(f"Component Name  : {component_name}", color)
+                colored_print(f"Image Name      : {image_name}", color)
+                colored_print(f"Image SHA       : {image_sha.split(':')[1]}", color)
+                colored_print(f"Quay  SHA       : {quay_sha.split(':')[1]}", color)
+                print("\n")
             else:
-                color = 'green'
-                
-            colored_print(f"Component Name  : {component_name}", color)
-            colored_print(f"Image Name      : {image_name}", color)
-            colored_print(f"Image SHA       : {image_sha.split(':')[1]}", color)
-            colored_print(f"Quay  SHA       : {quay_sha.split(':')[1]}", color)
-            print("\n")
-        else:
-            colored_print(f"ValueError: Invalid Image reference found in '{nudged_file_url}'.", "light_red")
-            print("\n")
-            colored_print(f"Image '{image_name}' is not from 'modh' quay repo!", "red")
-            exit(1)
+                colored_print(f"ValueError: Invalid Image reference found in '{nudged_file_url}'.", "light_red")
+                print("\n")
+                colored_print(f"Image '{image_name}' is not from 'modh' quay repo!", "red")
+                exit(1)
             
      
     return mismatch_found
