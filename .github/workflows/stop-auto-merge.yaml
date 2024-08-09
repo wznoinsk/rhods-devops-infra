@@ -7,6 +7,7 @@ on:
     inputs:
       release:
         type: string
+        description: 'RHOAI release where auto-merge should be halted'
         required: true
 
 jobs:
