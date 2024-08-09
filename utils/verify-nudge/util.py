@@ -9,26 +9,33 @@ import yaml
 
 def colored_print(text, color, isBold=False):
     """
-    Prints a message in a specified color and optional bold formatting.
+    Prints a message in a specified color with optional bold formatting.
 
     Args:
-        - message (str): The message to print.
-        - color (str): The color of the text. E.g., 'red', 'green', 'blue', etc.
+        - text (str): The text to print.
+        - color (str): The color of the text. E.g., 'red', 'light_red', 'green', etc.
         - isBold (bool): If True, makes the text bold. Default is False.
     """
     colors = {
-        'black': '30',
-        'red': '31',
-        'green': '32',
-        'yellow': '33',
-        'blue': '34',
-        'magenta': '35',
-        'cyan': '36',
-        'white': '37',
-        'reset': '0'
+        'light_black': '30',
+        'light_red': '31',
+        'light_green': '32',
+        'light_yellow': '33',
+        'light_blue': '34',
+        'light_magenta': '35',
+        'light_cyan': '36',
+        'light_white': '37',
+        'black': '90',
+        'red': '91',
+        'green': '92',
+        'yellow': '93',
+        'blue': '94',
+        'magenta': '95',
+        'cyan': '96',
+        'white': '97'
     }
     
-    color_code = colors.get(color, '37')
+    color_code = colors.get(color, '37')  # Default to white if color not found
     bold_code = '1' if isBold else '0'
     
     print(f"\033[{bold_code};{color_code}m{text}\033[0m")
@@ -440,12 +447,13 @@ def is_component_onboarded(release, onboarded_since):
 def verify_nudge(release, config):
     """
     Verifies the integrity of nudge files by comparing the SHA values of images from 
-    the nudged file against those in the Quay repository.
-    
+    the nudged file against those in the Quay repository. Also checks if the image is 
+    from the 'quay.io/modh' repository.
+
     Args:
         - release (str): The release version for which the nudge file should be verified.
         - config (dict): Configuration details including the name and URL paths necessary 
-                       for downloading and verifying the nudged file.
+                         for downloading and verifying the nudged file.
 
     Returns:
         - bool: True if any mismatch between the SHAs is found, False otherwise.
@@ -469,19 +477,26 @@ def verify_nudge(release, config):
         component_name, image_name, image_sha = extract_nudge_details(config, nudged_filename, param)
             
         if image_name:
-            # Fetch sha from quay
-            quay_sha = get_quay_image_sha(image_name, "rhoai-2.12")
+            if "quay.io/modh" in image_name:
+                # Fetch sha from quay
+                quay_sha = get_quay_image_sha(image_name, "rhoai-2.12")
 
-            if quay_sha != image_sha:
-                color = 'red'
-                mismatch_found = True
+                if quay_sha != image_sha:
+                    color = 'red'
+                    mismatch_found = True
+                else:
+                    color = 'green'
+                    
+                colored_print(f"Component Name  : {component_name}", color)
+                colored_print(f"Image Name      : {image_name}", color)
+                colored_print(f"Image SHA       : {image_sha.split(':')[1]}", color)
+                colored_print(f"Quay  SHA       : {quay_sha.split(':')[1]}", color)
+                print("\n")
             else:
-                color = 'green'
-                
-            colored_print(f"Component Name  : {component_name}", color)
-            colored_print(f"Image Name      : {image_name}", color)
-            colored_print(f"Image SHA       : {image_sha.split(':')[1]}", color)
-            colored_print(f"Quay  SHA       : {quay_sha.split(':')[1]}", color)
-            print("\n")
+                colored_print(f"ValueError: Invalid Image reference found in '{nudged_file_url}'.", "light_red")
+                print("\n")
+                colored_print(f"Image '{image_name}' is not from 'modh' quay repo!", "red")
+                exit(1)
+            
      
     return mismatch_found

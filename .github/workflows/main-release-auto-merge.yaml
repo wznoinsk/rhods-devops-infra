@@ -116,5 +116,5 @@ jobs:
         if: ${{ failure() }}
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_MESSAGE: ':red-warning: Image Digest Mismatch Found!'
+          SLACK_MESSAGE: ':red-warning: Main-Release Auto Merge Failed!'
           SLACK_WEBHOOK: ${{ secrets.RHOAI_DEVOPS_SLACK_WEBHOOK }}
