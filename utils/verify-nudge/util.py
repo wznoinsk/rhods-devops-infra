@@ -9,26 +9,33 @@ import yaml
 
 def colored_print(text, color, isBold=False):
     """
-    Prints a message in a specified color and optional bold formatting.
+    Prints a message in a specified color with optional bold formatting.
 
     Args:
-        - message (str): The message to print.
-        - color (str): The color of the text. E.g., 'red', 'green', 'blue', etc.
+        - text (str): The text to print.
+        - color (str): The color of the text. E.g., 'red', 'light_red', 'green', etc.
         - isBold (bool): If True, makes the text bold. Default is False.
     """
     colors = {
-        'black': '30',
-        'red': '31',
-        'green': '32',
-        'yellow': '33',
-        'blue': '34',
-        'magenta': '35',
-        'cyan': '36',
-        'white': '37',
-        'reset': '0'
+        'light_black': '30',
+        'light_red': '31',
+        'light_green': '32',
+        'light_yellow': '33',
+        'light_blue': '34',
+        'light_magenta': '35',
+        'light_cyan': '36',
+        'light_white': '37',
+        'black': '90',
+        'red': '91',
+        'green': '92',
+        'yellow': '93',
+        'blue': '94',
+        'magenta': '95',
+        'cyan': '96',
+        'white': '97'
     }
     
-    color_code = colors.get(color, '37')
+    color_code = colors.get(color, '37')  # Default to white if color not found
     bold_code = '1' if isBold else '0'
     
     print(f"\033[{bold_code};{color_code}m{text}\033[0m")
