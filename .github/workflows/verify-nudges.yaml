@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       rhoai-releases:
-        description: 'Comma-separated RHOAI releases. Leave empty to verify all active releases.'
+        description: 'Use commas to specify multiple RHOAI releases. Leave empty to verify all active releases.'
         required: false
 
 jobs:

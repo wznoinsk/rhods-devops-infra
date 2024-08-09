@@ -479,7 +479,7 @@ def verify_nudge(release, config):
         if image_name:
             if "quay.io/modh" in image_name:
                 # Fetch sha from quay
-                quay_sha = get_quay_image_sha(image_name, "rhoai-2.12")
+                quay_sha = get_quay_image_sha(image_name, release)
 
                 if quay_sha != image_sha:
                     color = 'red'
