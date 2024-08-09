@@ -64,7 +64,7 @@ def validate_config_yaml(config):
       return True
     except (ValueError, TypeError) as e:
         util.colored_print(f"Validation Failed for '{filename}'.", "light_red")
-        print("\n")
+        print()
         util.colored_print(e, "red")
         exit(1)
           
@@ -111,7 +111,7 @@ def validate_releases_yaml(rhoai_releases):
       return True
     except (ValueError, TypeError) as e:
         util.colored_print(f"Validation Failed for '{filename}'.", "light_red")
-        print("\n")
+        print()
         util.colored_print(e, "red")
         exit(1)
     

@@ -1,8 +1,18 @@
+######################################################################################################################
+# name              : Config name, usually the git repo name. [type='str']                                           #
+# repo-url          : URL of the git repository. [type='str']                                                        #
+# nudged-file-path  : Path to the nudged file from the repo root. [type='str']                                       #
+# onboarded-since   : (optional) Release where the component was onboarded. [type='str']                             #
+# verify-components : (optional) Components to verify from the nudged file. Verifies all if absent. [type='list']    #
+######################################################################################################################
+
 - name: kserve
   repo-url: https://github.com/red-hat-data-services/kserve.git
   nudged-file-path: config/overlays/odh/params.env
+
 - name: odh-model-controller
   repo-url: https://github.com/red-hat-data-services/odh-model-controller.git
   nudged-file-path: config/base/params.env
+  onboarded-since: rhoai-2.11
   verify-components:
     - caikit-standalone-image

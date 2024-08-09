@@ -84,7 +84,7 @@ def download_file(filename, url):
 
     except (requests.exceptions.RequestException, Exception) as e:
         colored_print(f"An unexpected error occurred while downloading '{filename}' from url '{url}'.", "light_red")
-        print("\n")
+        print()
         colored_print(e, "red")
         exit(1)
 
@@ -107,12 +107,12 @@ def remove_file(filename):
         os.remove(filename)
     except OSError as e:
         colored_print(f"File system error while deleting file '{filename}'.", "light_red")
-        print("\n")
+        print()
         colored_print(e, "red")
         exit(1)
     except Exception as e:
         colored_print(f"An unexpected error occurred while deleting file '{filename}'.", "light_red")
-        print("\n")
+        print()
         colored_print(e, "red")
         exit(1)
 
@@ -143,17 +143,17 @@ def parse_yaml(file_path):
 
     except yaml.YAMLError as e:
         colored_print(f"YAML error occured while parsing '{file_path}'.", "light_red")
-        print("\n")
+        print()
         colored_print(e, "red")
         exit(1)
     except FileNotFoundError as e:
         colored_print(f"Unable to parse '{file_path}'. File not found!", "light_red")
-        print("\n")
+        print()
         colored_print(e, "red")
         exit(1)
     except Exception as e:
         colored_print(f"An unexpected error occurred while parsing '{file_path}'.", "light_red")
-        print("\n")
+        print()
         colored_print(e, "red")
         exit(1)
 
@@ -195,7 +195,7 @@ def parse_nudged_file(file_path):
         
     except Exception as e:
         colored_print(f"An error occured while reading the nudged file '{file_path}'", "light_red")
-        print("\n")
+        print()
         colored_print(e, "red")
         exit(1)
     
@@ -235,13 +235,13 @@ def extract_nudge_details(config, nudged_filename, params_env):
                 raise Exception("Error: The Image reference doesn't have SHA Digest.")
         else:
             colored_print(f"'[{component_name}]' is not in verify-components list. Skipping nudge verification! ", "yellow")
-            print("\n")
+            print()
         
         return component_name, image_name, image_sha
     
     except Exception as e:
         colored_print(f"Invalid '{nudged_filename}': Unable to extract SHA Digest from '{params_env}'.", "light_red")
-        print("\n")
+        print()
         colored_print(e, "red")
         exit(1)
         
@@ -272,7 +272,7 @@ def get_quay_image_sha_using_skopeo(image_name, tag):
         return result.stdout.strip()  # Remove any leading/trailing whitespace
     except (subprocess.CalledProcessError, Exception) as e:
         colored_print(f"An unexpected error occurred while executing command: '{command}'", "light_red")
-        print("\n")
+        print()
         colored_print(e, "red")
         exit(1)
 
@@ -329,7 +329,7 @@ def get_quay_image_sha(image_name, image_tag):
 
     except (requests.exceptions.RequestException, Exception) as e:
         colored_print(f"An error occured while fetching image sha for '{image_name}:{image_tag}'", "light_red")
-        print("\n")
+        print()
         colored_print(e, "red")
         exit(1)
         
@@ -491,10 +491,10 @@ def verify_nudge(release, config):
                 colored_print(f"Image Name      : {image_name}", color)
                 colored_print(f"Image SHA       : {image_sha.split(':')[1]}", color)
                 colored_print(f"Quay  SHA       : {quay_sha.split(':')[1]}", color)
-                print("\n")
+                print()
             else:
                 colored_print(f"ValueError: Invalid Image reference found in '{nudged_file_url}'.", "light_red")
-                print("\n")
+                print()
                 colored_print(f"Image '{image_name}' is not from 'modh' quay repo!", "red")
                 exit(1)
             

@@ -28,7 +28,7 @@ def main():
                 # Skip, if the component was not onboarded in the current release
                 if not util.is_component_onboarded(release, config.get('onboarded-since', '')):
                         util.colored_print(f"'[{config.get('name')}]' nudge started in release '{release}'. Skipping nudge verification! ", "yellow")
-                        print("\n")
+                        print()
                         continue
                 
                 if util.verify_nudge(release, config):

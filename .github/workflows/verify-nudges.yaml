@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies from Pipfile.lock
         run: cd utils/verify-nudge && pipenv install --ignore-pipfile
 
-      - name: Execute main.py
+      - name: Verify Nudges
         env:
           QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
         run: cd utils/verify-nudge && pipenv run python main.py
