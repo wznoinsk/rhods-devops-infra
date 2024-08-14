@@ -181,8 +181,11 @@ def parse_nudged_file(file_path):
             # Read the file and store each line in the list
             with open(file_path, 'r') as file:
                 for line in file:
-                    # Strip leading/trailing whitespace and add the line to the list
-                    params_list.append(line.strip())
+                    # Strip leading and trailing white spaces
+                    stripped_line = line.strip()
+                    # Only add non-empty lines to the list
+                    if stripped_line:
+                        params_list.append(stripped_line)
         else:
             raise Exception(f"Error: The file '{file_path}' does not exist.")
 
@@ -472,6 +475,7 @@ def verify_nudge(release, config):
 
     # Compare the SHAs and print the results
     for param in params_env_list:
+        # colored_print(f"param  : {param}", "blue")
         
         # Extracting details from the nudged file
         component_name, image_name, image_sha = extract_nudge_details(config, nudged_filename, param)
