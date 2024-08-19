@@ -80,6 +80,14 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/data-science-pipelines-operator.git
     branch: main
+- name: argo-workflows
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/argo-workflows.git
+    branch: stable
+  dest:
+    url: https://github.com/red-hat-data-services/argo-workflows.git
+    branch: main
 - name: trustyai-explainability
   automerge: 'no'
   src:
