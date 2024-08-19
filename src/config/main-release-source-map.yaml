@@ -78,3 +78,6 @@ git:
 - name: text-generation-inference
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/text-generation-inference.git
+- name: distributed-workloads
+  automerge: 'yes'
+  repo-url: https://github.com/red-hat-data-services/distributed-workloads.git

@@ -31,6 +31,7 @@ on:
           - trustyai-service-operator
           - text-generation-inference
           - must-gather
+          - distributed-workloads
               
   schedule:
     - cron: '0 1 * * *'
