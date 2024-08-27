@@ -1,7 +1,6 @@
 import os
 from datetime import datetime
 import smartsheet
-import argparse
 import re
 from jira import JIRA
 
@@ -29,10 +28,10 @@ class MetricsTool:
         return releases
 
     def extract_version(self, release_name): 
-        match = re.match(r'(\d+\.\d+)', release_name)  #look for a version number in the format "X.Y" at the start of the release_name string using regex.
+        match = re.match(r'(\d+\.\d+)', release_name) #look for a version number in the format "X.Y" at the start of the release_name string using regex.
         return match.group(1) if match else None
 
-    def get_closest_future_freeze_version(self):
+    def get_closest_future_code_freeze_version(self):
         today = datetime.now().date() 
         closest_version, closest_date = None, None
 
@@ -64,7 +63,7 @@ def main():
     metrics = MetricsTool()
     
     token = os.getenv('JIRA_TOKEN')
-    closest_version = metrics.get_closest_future_freeze_version()
+    closest_version = metrics.get_closest_future_code_freeze_version()
     print("\nCurrent Version:", closest_version)
     start_date, end_date = metrics.print_release_dates(version=closest_version)
     print(f"{closest_version} Sprint Starts: {start_date} and {closest_version} Code Freeze: {end_date}")
@@ -73,10 +72,10 @@ def main():
     fixVersion = f"RHOAI_{closest_version}.0"
     jql_query = (
         f'Project=RHOAIENG AND fixVersion={fixVersion} AND '
-        '(type in (Bug, Story, Epic, Task)) AND '
-        '(component not in (UXD, Documentation, QE) OR component is EMPTY) AND '
+        f'(type in (Bug, Story, Epic, Task)) AND '
+        f'(component not in (Documentation, PXE)) AND '
         f'created >= "{start_date}" AND created <= "{end_date}" AND '
-        'labels NOT IN ("found_nightly")'
+        f'(labels NOT IN ("found_nightly", "RHOAI-releases", "pre-GA", "pre-RC") OR labels IS EMPTY)'
     )
 
     print(f"\nSearching for Jiras with the filter: {jql_query}")
