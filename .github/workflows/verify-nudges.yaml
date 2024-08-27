@@ -33,7 +33,20 @@ jobs:
       - name: Verify Nudges
         env:
           QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
-        run: cd utils/verify-nudge && pipenv run python main.py
+        run: |
+          cd utils/verify-nudge
+          if [ -n "${{ github.event.inputs.rhoai-releases }}" ]; then
+            pipenv run python main.py --releases=${{ github.event.inputs.rhoai-releases }}
+          else
+            pipenv run python main.py
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: |
+            utils/verify-nudge/downloads
 
       - name: Slack Notification
         if: ${{ failure() }}
