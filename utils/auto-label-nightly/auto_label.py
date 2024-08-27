@@ -33,15 +33,15 @@ class MetricsTool:
 
     def get_closest_future_code_freeze_version(self):
         today = datetime.now().date() 
-        closest_version, closest_date = None, None
+        current_version, closest_date = None, None
 
-        for version, dates in self.get_dates_by_version().items():
-            freeze_date = dates.get('Code Freeze')
-            if freeze_date and freeze_date >= today: #if the freeze date is in the future
-                if closest_date is None or freeze_date < closest_date: #if this is the first future freeze date or if this freeze date is closer than the previous closest freeze date
-                    closest_date, closest_version = freeze_date, version #set the closest date and version to the current freeze date and version
+        for version, dates in self.get_dates_by_version().items(): #iterate through the versions and dates
+            code_freeze_date = dates.get('Code Freeze')
+            if code_freeze_date and code_freeze_date >= today: #if the code freeze date is in the future
+                if closest_date is None or code_freeze_date < closest_date: #if this is the first future code freeze date or if this code freeze date is closer than the previous closest code freeze date
+                    closest_date, current_version = code_freeze_date, version #set the closest date and version to the current code freeze date and version
 
-        return closest_version
+        return current_version
     
     def print_release_dates(self, version=None):
         releases = self.get_dates_by_version()
@@ -63,19 +63,20 @@ def main():
     metrics = MetricsTool()
     
     token = os.getenv('JIRA_TOKEN')
-    closest_version = metrics.get_closest_future_code_freeze_version()
-    print("\nCurrent Version:", closest_version)
-    start_date, end_date = metrics.print_release_dates(version=closest_version)
-    print(f"{closest_version} Sprint Starts: {start_date} and {closest_version} Code Freeze: {end_date}")
+    current_version = metrics.get_closest_future_code_freeze_version()
+    print("\nCurrent Version:", current_version)
+    start_date, end_date = metrics.print_release_dates(version=current_version)
+    print(f"{current_version} Sprint Starts: {start_date} and {current_version} Code Freeze: {end_date}")
+
 
     jira = JIRA('https://issues.redhat.com', token_auth=token)
-    fixVersion = f"RHOAI_{closest_version}.0"
+    fixVersion = f"RHOAI_{current_version}.0"
     jql_query = (
         f'Project=RHOAIENG AND fixVersion={fixVersion} AND '
-        f'(type in (Bug, Story, Epic, Task)) AND '
+        f'(type in (Bug)) AND '
         f'(component not in (Documentation, PXE)) AND '
         f'created >= "{start_date}" AND created <= "{end_date}" AND '
-        f'(labels NOT IN ("found_nightly", "RHOAI-releases", "pre-GA", "pre-RC") OR labels IS EMPTY)'
+        f'(labels NOT IN ("found_in_nightly", "RHOAI-releases", "pre-GA", "pre-RC") OR labels IS EMPTY)'
     )
 
     print(f"\nSearching for Jiras with the filter: {jql_query}")
@@ -84,7 +85,7 @@ def main():
     for issue in issues_in_release:
         print(f"Adding 'found_nightly' label to {issue.key}")
         # labels = issue.fields.labels
-        # labels.append("found_nightly")
+        # labels.append("found_in_nightly")
         # issue.update(fields={"labels": labels})
 
 if __name__ == "__main__":
