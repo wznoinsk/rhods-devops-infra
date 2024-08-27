@@ -21,7 +21,7 @@ def main():
             util.colored_print(text=f"-> File Path : {config.get('nudged-file-path')}", color="white")
             util.colored_print(text=f"-> Repo URL  : {config.get('repo-url')}", color="white")
             util.colored_print("===================================================================================", "white")
-            #util.colored_print(text=f"\n[For Debug] Config: '{config}' \n", color="white"))
+            #util.colored_print(text=f"\n[For Debug] Config: '{config}' \n", color="white")
     
             if validator.validate_config_yaml(config):
                 

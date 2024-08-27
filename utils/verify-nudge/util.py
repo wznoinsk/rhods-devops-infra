@@ -4,6 +4,7 @@ import subprocess
 import requests
 import validator
 import yaml
+from distutils.version import LooseVersion
 
 
 
@@ -441,7 +442,9 @@ def is_component_onboarded(release, onboarded_since):
               version, False otherwise.
     """
     if onboarded_since:
-        return float(release.replace('rhoai-', '')) >= float(onboarded_since.replace('rhoai-', ''))
+        release_version = LooseVersion(release.replace('rhoai-', ''))
+        onboarded_version = LooseVersion(onboarded_since.replace('rhoai-', ''))
+        return release_version >= onboarded_version
     else:
         return True
     
