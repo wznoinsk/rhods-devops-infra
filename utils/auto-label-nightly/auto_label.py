@@ -84,9 +84,9 @@ def main():
     issues_in_release = jira.search_issues(jql_query)
     for issue in issues_in_release:
         print(f"Adding 'found_nightly' label to {issue.key}")
-        # labels = issue.fields.labels
-        # labels.append("found_in_nightly")
-        # issue.update(fields={"labels": labels})
+        labels = issue.fields.labels
+        labels.append("found_in_nightly")
+        issue.update(fields={"labels": labels})
 
 if __name__ == "__main__":
     main()
