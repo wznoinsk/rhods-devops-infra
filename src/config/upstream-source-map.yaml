@@ -154,14 +154,6 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/caikit-tgis-serving.git
     branch: main
-- name: caikit-nlp-upstream
-  automerge: 'yes'
-  src:
-    url: https://github.com/caikit/caikit-nlp.git
-    branch: main
-  dest:
-    url: https://github.com/opendatahub-io/caikit-nlp.git
-    branch: main
 - name: caikit-nlp
   automerge: 'yes'
   src:
