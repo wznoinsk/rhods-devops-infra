@@ -9,7 +9,6 @@ on:
         options:
           - all
           - argo-workflows
-          - caikit-nlp-upstream
           - caikit-nlp
           - caikit-tgis-serving
           - codeflare-downstream
