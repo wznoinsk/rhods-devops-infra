@@ -158,7 +158,7 @@ git:
   automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/caikit-nlp.git
-    branch: main
+    branch: release
   dest:
     url: https://github.com/red-hat-data-services/caikit-nlp.git
     branch: main
