@@ -20,7 +20,7 @@ class MetricsTool:
 
     def get_dates_by_version(self):
         releases = {}
-        for keyword, title in [('sprint starts', 'Sprint Starts'), ('code freeze', 'Code Freeze')]: #search for sprint starts and code freeze
+        for keyword, title in [('sprint starts', 'Sprint Starts'), ('code freeze','Code Freeze'), ('rc available for qe', 'RC available for QE'), ('ga', 'GA')]: #search for sprint starts and code freeze
             for release, date in self.get_dates(keyword).items(): #get the dates for each keyword
                 version = self.extract_version(release) #get the version number from the release name
                 if version:
@@ -53,11 +53,13 @@ class MetricsTool:
             for title, date in dates.items(): #iterate through the dates
                 #assign start and end dates based on the title
                 if title == "Sprint Starts":
-                    start_date = date
-                elif title == "Code Freeze":
-                    end_date = date
+                    sprint_start_date = date
+                elif title == "RC available for QE":
+                    rc_date = date
+                elif title == "GA":
+                    ga_date = date
             
-        return start_date, end_date
+        return sprint_start_date, rc_date, ga_date
 
 def main():
     metrics = MetricsTool()
@@ -65,27 +67,47 @@ def main():
     token = os.getenv('JIRA_TOKEN')
     current_version = metrics.get_closest_future_code_freeze_version()
     print("\nCurrent Version:", current_version)
-    start_date, end_date = metrics.print_release_dates(version=current_version)
-    print(f"{current_version} Sprint Starts: {start_date} and {current_version} Code Freeze: {end_date}")
+    sprint_start_date, rc_date, ga_date = metrics.print_release_dates(version=current_version)
+    print(f"{current_version} Sprint Starts: {sprint_start_date} and {current_version} RC available for QE: {rc_date} and {current_version} GA: {ga_date}")
 
-
+    # Set found_in_nightly label
     jira = JIRA('https://issues.redhat.com', token_auth=token)
     fixVersion = f"RHOAI_{current_version}.0"
     jql_query = (
         f'Project=RHOAIENG AND fixVersion={fixVersion} AND '
         f'(type in (Bug)) AND '
         f'(component not in (Documentation, PXE)) AND '
-        f'created >= "{start_date}" AND created <= "{end_date}" AND '
-        f'(labels NOT IN ("found_in_nightly", "RHOAI-releases", "pre-GA", "pre-RC") OR labels IS EMPTY)'
+        f'created >= "{sprint_start_date}" AND created < "{rc_date}" AND '
+        f'(labels NOT IN ("found_in_nightly", "RHOAI-releases", "RHOAI-internal", "pre-GA", "pre-RC") OR labels IS EMPTY) AND '
+        f'(summary !~ "Snyk" AND summary !~ "CVE-*")'
     )
 
     print(f"\nSearching for Jiras with the filter: {jql_query}")
-    
     issues_in_release = jira.search_issues(jql_query)
     for issue in issues_in_release:
-        print(f"Adding 'found_nightly' label to {issue.key}")
+        print(f"Adding 'found_in_nightly' label to {issue.key}")
         labels = issue.fields.labels
         labels.append("found_in_nightly")
+        issue.update(fields={"labels": labels})
+
+    # Set found_in_rc label
+    jira = JIRA('https://issues.redhat.com', token_auth=token)
+    fixVersion = f"RHOAI_{current_version}.0"
+    jql_query = (
+        f'Project=RHOAIENG AND affectedVersion={fixVersion} AND '
+        f'(type in (Bug)) AND '
+        f'(component not in (Documentation, PXE)) AND '
+        f'created >= "{rc_date}" AND created < "{ga_date}" AND '
+        f'(labels NOT IN ("found_in_rc", "RHOAI-releases", "RHOAI-internal", "pre-GA", "pre-RC") OR labels IS EMPTY) AND '
+        f'(summary !~ "Snyk" AND summary !~ "CVE-*")'
+    )
+
+    print(f"\nSearching for Jiras with the filter: {jql_query}")
+    issues_in_release = jira.search_issues(jql_query)
+    for issue in issues_in_release:
+        print(f"Adding 'found_in_rc' label to {issue.key}")
+        labels = issue.fields.labels
+        labels.append("found_in_rc")
         issue.update(fields={"labels": labels})
 
 if __name__ == "__main__":
