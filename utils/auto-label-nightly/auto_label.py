@@ -74,7 +74,7 @@ def main():
     jira = JIRA('https://issues.redhat.com', token_auth=token)
     fixVersion = f"RHOAI_{current_version}.0"
     jql_query = (
-        f'Project=RHOAIENG AND fixVersion={fixVersion} AND '
+        f'Project=RHOAIENG AND affectedVersion={fixVersion} AND '
         f'(type in (Bug)) AND '
         f'(component not in (Documentation, PXE)) AND '
         f'created >= "{sprint_start_date}" AND created < "{rc_date}" AND '
