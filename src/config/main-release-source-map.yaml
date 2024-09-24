@@ -81,3 +81,9 @@ git:
 - name: distributed-workloads
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/distributed-workloads.git
+- name: model-registry
+  automerge: 'yes'
+  repo-url: https://github.com/red-hat-data-services/model-registry.git
+- name: model-registry-operator
+  automerge: 'yes'
+  repo-url: https://github.com/red-hat-data-services/model-registry-operator.git

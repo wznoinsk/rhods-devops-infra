@@ -22,6 +22,8 @@ on:
           - modelmesh
           - modelmesh-runtime-adapter
           - modelmesh-serving
+          - model-registry
+          - model-registry-operator
           - notebooks
           - odh-dashboard
           - odh-model-controller
@@ -33,7 +35,7 @@ on:
           - text-generation-inference
           - must-gather
           - distributed-workloads
-              
+
   schedule:
     - cron: '0 1 * * *'
 
