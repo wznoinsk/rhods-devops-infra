@@ -48,7 +48,7 @@ class MetricsTool:
         if version: 
             releases = {key: value for key, value in releases.items() if version in key} #filter the releases to only include the specified version
 
-        start_date, end_date = None, None
+        sprint_start_date, rc_date, ga_date = None, None, None
         for version, dates in releases.items(): #iterate through the releases
             for title, date in dates.items(): #iterate through the dates
                 #assign start and end dates based on the title
