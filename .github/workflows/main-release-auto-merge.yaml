@@ -35,6 +35,7 @@ on:
           - text-generation-inference
           - must-gather
           - distributed-workloads
+          - vllm
 
   schedule:
     - cron: '0 1 * * *'
