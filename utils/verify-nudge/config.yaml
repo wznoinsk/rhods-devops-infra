@@ -16,4 +16,3 @@
   onboarded-since: rhoai-2.11
   verify-components:
     - caikit-standalone-image
-    - vllm-image
