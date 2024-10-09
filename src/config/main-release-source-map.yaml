@@ -87,3 +87,6 @@ git:
 - name: model-registry-operator
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/model-registry-operator.git
+- name: vllm
+  automerge: 'yes'
+  repo-url: https://github.com/red-hat-data-services/vllm.git
