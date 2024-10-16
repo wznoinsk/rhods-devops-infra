@@ -111,7 +111,7 @@ jobs:
           done
           GIL=$GLOBAL_IGNORE_LIST
           echo "matrix ignore files = ${{ matrix.mapping.ignore-files }}"
-          if [[ -n ${{ matrix.mapping.ignore-files }} ]]; then GIL=", $GIL"; fi
+          if [[ -n "${{ matrix.mapping.ignore-files }}" ]]; then GIL=", $GIL"; fi
           echo "::set-output name=GLOBAL_IGNORE_LIST::$GIL"
           
       - name: Main to release gitHub sync
@@ -122,7 +122,7 @@ jobs:
           downstream_repo: "${{ matrix.mapping.repo-url }}"
           downstream_branch: "${{ matrix.release }}"
           token: ${{ steps.app-token.outputs.token }}
-          ignore_files: "${{ matrix.mapping.ignore-files }}, ${{ steps.git-configuration.outputs.GLOBAL_IGNORE_LIST }}"
+          ignore_files: "${{ matrix.mapping.ignore-files }}${{ steps.git-configuration.outputs.GLOBAL_IGNORE_LIST }}"
           merge_args: "--no-edit"
 
       - name: Slack Notification
