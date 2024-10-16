@@ -109,7 +109,10 @@ jobs:
              echo "$exclusion"
              echo "$exclusion merge=ours" >> .gitattributes
           done
-          echo "::set-output name=GLOBAL_IGNORE_LIST::$GLOBAL_IGNORE_LIST"
+          GIL=$GLOBAL_IGNORE_LIST
+          if [[ -n "${{ matrix.mapping.ignore-files }}" ]]; then GIL=", $GIL"; fi
+          echo "::set-output name=GLOBAL_IGNORE_LIST::$GIL"
+          
       - name: Main to release gitHub sync
         uses: dchourasia/sync-git-branches@1.1
         with:
