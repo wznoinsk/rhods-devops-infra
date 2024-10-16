@@ -39,8 +39,7 @@ on:
 
   schedule:
     - cron: '0 1 * * *'
-env:
-  GLOBAL_IGNORE_LIST: .github/renovate.json
+
 permissions:
   packages: write
   contents: read
@@ -49,6 +48,8 @@ permissions:
 env:
   SOURCE_MAP: "src/config/main-release-source-map.yaml"
   RELEASES: "src/config/releases.yaml"
+  GLOBAL_IGNORE_LIST: .github/renovate.json
+  
 jobs:
 
   setup:
