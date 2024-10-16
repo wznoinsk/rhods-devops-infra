@@ -39,7 +39,8 @@ on:
 
   schedule:
     - cron: '0 1 * * *'
-
+env:
+  GLOBAL_IGNORE_LIST: .github/renovate.json
 permissions:
   packages: write
   contents: read
@@ -114,7 +115,7 @@ jobs:
           downstream_repo: "${{ matrix.mapping.repo-url }}"
           downstream_branch: "${{ matrix.release }}"
           token: ${{ steps.app-token.outputs.token }}
-          ignore_files: "${{ matrix.mapping.ignore-files }}"
+          ignore_files: "${{ matrix.mapping.ignore-files }},${GLOBAL_IGNORE_LIST}"
           merge_args: "--no-edit"
 
       - name: Slack Notification
