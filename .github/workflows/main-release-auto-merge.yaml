@@ -110,7 +110,8 @@ jobs:
              echo "$exclusion merge=ours" >> .gitattributes
           done
           GIL=$GLOBAL_IGNORE_LIST
-          if [[ -n "${{ matrix.mapping.ignore-files }}" ]]; then GIL=", $GIL"; fi
+          echo "matrix ignore files = ${{ matrix.mapping.ignore-files }}"
+          if [[ -n ${{ matrix.mapping.ignore-files }} ]]; then GIL=", $GIL"; fi
           echo "::set-output name=GLOBAL_IGNORE_LIST::$GIL"
           
       - name: Main to release gitHub sync
