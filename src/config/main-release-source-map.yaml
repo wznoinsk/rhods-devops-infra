@@ -90,3 +90,6 @@ git:
 - name: vllm
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/vllm.git
+- name: caikit-tgis-serving
+  automerge: 'yes'
+  repo-url: https://github.com/red-hat-data-services/caikit-tgis-serving.git
