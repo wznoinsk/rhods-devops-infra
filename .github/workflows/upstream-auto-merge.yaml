@@ -22,6 +22,7 @@ on:
           - kserve
           - kubeflow
           - kuberay
+          - lm-evaluation-harness
           - modelmesh
           - modelmesh-runtime-adapter
           - modelmesh-serving
