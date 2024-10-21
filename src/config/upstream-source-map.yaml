@@ -189,10 +189,10 @@ git:
     branch: master
   ignore-files: config/overlays/odh/params.env
 - name: rhods-operator
-  automerge: 'no'
+  automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/opendatahub-operator.git
-    branch: main
+    branch: rhoai
   dest:
     url: https://github.com/red-hat-data-services/rhods-operator.git
     branch: main
