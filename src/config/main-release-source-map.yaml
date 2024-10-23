@@ -43,6 +43,7 @@ git:
 - name: rhods-operator
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/rhods-operator.git
+  ignore-files: build/**
 - name: kserve
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/kserve.git
