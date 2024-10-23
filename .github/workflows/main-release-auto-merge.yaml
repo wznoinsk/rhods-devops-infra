@@ -18,6 +18,7 @@ on:
           - kserve
           - kubeflow
           - kuberay
+          - lm-evaluation-harness
           - kueue
           - ml-metadata
           - modelmesh

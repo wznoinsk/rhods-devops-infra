@@ -94,3 +94,7 @@ git:
 - name: caikit-tgis-serving
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/caikit-tgis-serving.git
+- name: lm-evaluation-harness
+  automerge: 'yes'
+  repo-url: https://github.com/red-hat-data-services/lm-evaluation-harness.git
+  ignore-files: '.tekton/*'
