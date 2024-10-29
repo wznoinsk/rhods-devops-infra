@@ -19,7 +19,7 @@ FULL_IMAGE_URI_WITH_DIGEST=
 TEXT_OUTPUT=
 
 function help() {
-  echo "Usage: tracer.sh [-h] [-v] [-c] [-n] [-b] [--configure] [--update]"
+  echo "Usage: tracer.sh [-h] [-v] [-c] [-n] [-b] [configure] [update]"
   echo "  -h, --help  Display this help message"
   echo "  -v, --rhoai-version  RHOAI version to get the info for, valid formats - X.Y, rhoai-X.Y, vX.Y, default value is latest RHOAI version"
   echo "  -d, --digest  Complete digest of the image to be provided as an input"
@@ -27,8 +27,8 @@ function help() {
   echo "  -n --nightly  Show the info of latest nightly build"
   echo "  -b --bundle  Show the info about operator bundle image, by default it will show FBC image info"
   echo "  -i --image  complete URI for the image to be provided as an input"
-  echo " --configure  To configure the tracer and skopeo as needed"
-  echo " --update   To update the tracer to latest version available in the repo"
+  echo " configure  To configure the tracer and skopeo as needed"
+  echo " update   To update the tracer to latest version available in the repo"
 }
 
 
@@ -80,6 +80,7 @@ while [[ $# -gt 0 ]]; do
         ;;
         *)
         echo -n "Invalid arguments, please check the usage doc"
+        help
         exit 1
         ;;
     esac
