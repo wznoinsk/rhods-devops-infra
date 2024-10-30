@@ -8,7 +8,8 @@ Tracer is a client side tool which can be used to trace the information about la
    * Trace down the individual commits of each component with any given FBC/index image
 
 Please note:
-   * Tracer will only work for the RHOAI versions built after the Konflux transition 
+   * Tracer will only work for the RHOAI versions built after the Konflux transition
+
 Prerequisites
 ----------------
 - bash 4.0 or higher
