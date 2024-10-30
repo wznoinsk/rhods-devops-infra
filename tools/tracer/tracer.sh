@@ -97,7 +97,7 @@ fi
 
 if [[ $UPDATE == "true" ]]
 then
-  git_url=https://github.com/red-hat-data-services/rhods-devops-infra
+  git_url=git@github.com:red-hat-data-services/rhods-devops-infra.git
   current_script_path=$(realpath $0)
   current_dir=$(dirname "${current_script_path}")
   temp=$(mktemp -d)
