@@ -40,7 +40,7 @@ Tracer has multiple functionalities exposed through a combination of following a
   4. -c, --show-commits - Show the commits info for all the components, by default only basic info is shown
   5. -n, --nightly - Show the info of latest nightly build, by default the CI-build info is shown
   6. -b, --bundle - Show the info about operator bundle image, by default it will show the FBC image info
-  7. -i, --image - complete URI of the image to be provided as an input, optional, if image and digest both are provided then image will take precedence, it suppports all the image formats - :tag, @sha256:digest and :tag@sha256:digest 
+  7. -i, --image - Complete URI of the image to be provided as an input, optional, if image and digest both are provided then image will take precedence, it suppports all the image formats - :tag, @sha256:digest and :tag@sha256:digest 
   8. configure - To configure the tracer and skopeo as needed
   9. update - To update the tracer to latest version available in the repo
 ```
