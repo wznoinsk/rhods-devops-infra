@@ -20,15 +20,15 @@ TEXT_OUTPUT=
 
 function help() {
   echo "Usage: tracer.sh [-h] [-v] [-c] [-n] [-b] [configure] [update]"
-  echo "  -h, --help  Display this help message"
-  echo "  -v, --rhoai-version  RHOAI version to get the build info for, valid formats are X.Y or rhoai-X.Y or vX.Y, optional, default value is latest RHOAI version"
-  echo "  -d, --digest  Complete digest of the image to be provided as an input, optional, if rhoai-verson and digest both are provided then digest will take precedence"
-  echo "  -c --show-commits  Show the commits info for all the components, by default only basic info is shown"
-  echo "  -n --nightly  Show the info of latest nightly build, by default the CI-build info is shown"
-  echo "  -b --bundle  Show the info about operator bundle image, by default it will show the FBC image info"
-  echo "  -i --image  Complete URI of the image to be provided as an input, optional, if image and digest both are provided then image will take precedence, it suppports all the image formats - :tag, @sha256:digest and :tag@sha256:digest"
-  echo " configure  To configure the tracer and skopeo as needed"
-  echo " update   To update the tracer to latest version available in the repo"
+  echo "  -h, --help - Display this help message"
+  echo "  -v, --rhoai-version - RHOAI version to get the build info for, valid formats are X.Y or rhoai-X.Y or vX.Y, optional, default value is latest RHOAI version"
+  echo "  -d, --digest - Complete digest of the image to be provided as an input, optional, if rhoai-verson and digest both are provided then digest will take precedence"
+  echo "  -c --show-commits - Show the commits info for all the components, by default only basic info is shown"
+  echo "  -n --nightly - Show the info of latest nightly build, by default the CI-build info is shown"
+  echo "  -b --bundle - Show the info about operator bundle image, by default it will show the FBC image info"
+  echo "  -i --image - Complete URI of the image to be provided as an input, optional, if image and digest both are provided then image will take precedence, it suppports all the image formats - :tag, @sha256:digest and :tag@sha256:digest"
+  echo " configure - To configure the tracer and skopeo as needed"
+  echo " update - To update the tracer to latest version available in the repo"
 }
 
 
