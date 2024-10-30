@@ -162,9 +162,11 @@ then
 
   FULL_IMAGE_URI_WITH_DIGEST="${NAME}@${DIGEST}"
   BUILD_DATE=$(echo $labels | jq -r '."build-date"')
+  VERSION=$(echo $labels | jq -r '."version"')
 
   TEXT_OUTPUT="${TEXT_OUTPUT}Image-URI ${FULL_IMAGE_URI_WITH_DIGEST}\n"
   TEXT_OUTPUT="${TEXT_OUTPUT}Build-Date ${BUILD_DATE}\n"
+  TEXT_OUTPUT="${TEXT_OUTPUT}RHOAI-Version ${VERSION}\n"
 
   if [[ "$SHOW_COMMITS" == "true" ]]
   then
