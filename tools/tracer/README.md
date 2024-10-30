@@ -7,6 +7,8 @@ Tracer is a client side tool which can be used to trace the information about la
    * Trace the latest CI/nightly build info for any given RHOAI version 
    * Trace down the individual commits of each component with any given FBC/index image
 
+Please note:
+   * Tracer will only work for the RHOAI versions built after the Konflux transition 
 Prerequisites
 ----------------
 - bash 4.0 or higher
@@ -48,3 +50,6 @@ Examples
 * ```./tracer.sh --rhoai-version v2.16``` - will provide the basic build info of the latest **CI** build of 2.16
 * ```./tracer.sh --rhoai-version v2.16 --nightly``` - will provide the basic build info of the latest **nightly** build of 2.16
 * ```./tracer.sh --show-commits``` - will provide the **detailed** build info of with all the commit details of all the components for the latest **CI** build of latest RHOAI version
+* ```./tracer.sh --show-commits --image quay.io/rhoai/rhoai-fbc-fragment:rhoai-2.16@sha256:9f2937c6b367ff1211dba8d71438a93193638ecd06ee644bb9258e1a316a1541``` will provide the **detailed** build info of with all the commit details of all the components for the given image
+* ```./tracer.sh --digest 9f2937c6b367ff1211dba8d71438a93193638ecd06ee644bb9258e1a316a1541``` will show info about the FBC image with the given digest
+* ```./tracer.sh --bundle``` it will show the info about operator-bundle image instead of FBC image, all other parameters can be applied as needed
