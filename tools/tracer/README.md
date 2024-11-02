@@ -3,7 +3,7 @@ Tracer
 
 Overview
 ----------
-Tracer is a client side tool which can be used to trace the information about latest RHOAI builds without navigating to any external systems. It can majorly serve following use case: 
+Tracer is a client side tool which can be used to trace the information about latest RHOAI builds without navigating to any other systems. It can majorly serve following use case: 
    * Trace the latest CI/nightly build info for any given RHOAI version 
    * Trace down the individual commits of each component with any given FBC/index image
 
