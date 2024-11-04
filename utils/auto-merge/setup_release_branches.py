@@ -31,7 +31,7 @@ class setup_release_branches:
                 for row in sheet.rows 
                 if row.cells[1].value 
                     and row.cells[3].value 
-                    and re.match(r'sprint[\s-]*starts?', row.cells[1].value, re.IGNORECASE)
+                    and re.match(r'sprint[\s-]*starts?', str(row.cells[1].value), re.IGNORECASE)
                 }
 
         print('sprintStartDates', sprintStartDates)
