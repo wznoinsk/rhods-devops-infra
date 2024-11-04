@@ -57,7 +57,6 @@ while [[ $# -gt 0 ]]; do
         --show-commits | -c)
         SHOW_COMMITS=true
         shift
-        shift
         ;;
         --bundle | -b)
         IMAGE_TYPE=bundle
@@ -71,11 +70,9 @@ while [[ $# -gt 0 ]]; do
         configure)
         CONFIGURE=true
         shift
-        shift
         ;;
         update)
         UPDATE=true
-        shift
         shift
         ;;
         *)
@@ -134,7 +131,7 @@ then
     #TAG=$(echo $TAG | tr '[a-z]' '[A-Z]')
     if [[ "$TAG" == v* ]]; then TAG=$(echo $TAG | tr -d 'v'); fi
     if [[ "$TAG" != rhoai* ]]; then TAG="rhoai-${TAG}"; fi
-    if [[ "$BUILD_TYPE" == "NIGHTLY" ]]; then TAG="${TAG}-nightly"; echo $TAG; fi
+    if [[ "$BUILD_TYPE" == "NIGHTLY" ]]; then TAG="${TAG}-nightly"; fi
     IMAGE_MANIFEST=":$TAG"
   fi
   if [[ $IMAGE_TYPE == "FBC" ]]; then QUAY_REPO=$FBC_QUAY_REPO; elif [[ $IMAGE_TYPE == "BUNDLE" ]]; then QUAY_REPO=$BUNDLE_QUAY_REPO; fi
