@@ -16,8 +16,8 @@ class setup_release_branches:
         column_map = {}
         smart = smartsheet.Smartsheet()
         # response = smart.Sheets.list_sheets()
-        sheed_id = os.getenv('BUILD_SHEET_ID')
-        sheet = smart.Sheets.get_sheet(sheed_id)
+        sheet_id = os.getenv('BUILD_SHEET_ID')
+        sheet = smart.Sheets.get_sheet(sheet_id)
         for column in sheet.columns:
             column_map[column.title] = column.id
         # print(column_map)
