@@ -20,9 +20,17 @@ class stop_auto_merge:
         for column in sheet.columns:
             column_map[column.title] = column.id
         # print(column_map)
+        # 0       1           2           3           4
+        # comment task name   duration    start date  end date
 
         # process existing data
-        codeFreezeDates = {row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() for row in sheet.rows if row.cells[3].value and row.cells[1].value and ('code freeze' in str(row.cells[1].value).lower() or 'codefreeze' in str(row.cells[1].value).lower() or 'code-freeze' in str(row.cells[1].value).lower()) }
+        codeFreezeDates = {
+		row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() 
+		for row in sheet.rows 
+		if row.cells[3].value 
+			and row.cells[1].value 
+			and re.match(r'code[\s-]*freeze', str(row.cells[1].value), re.IGNORECASE)
+	}
         print('codeFreezeDates', codeFreezeDates)
         return codeFreezeDates
     def get_release_to_be_removed(self):
