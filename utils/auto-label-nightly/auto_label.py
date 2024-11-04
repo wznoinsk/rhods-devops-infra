@@ -20,7 +20,7 @@ class MetricsTool:
 
     def get_dates_by_version(self):
         releases = {}
-        for keyword, title in [('sprint starts', 'Sprint Starts'), ('code freeze','Code Freeze'), ('rc available for qe', 'RC available for QE'), ('ga', 'GA')]: #search for sprint starts and code freeze
+        for keyword, title in [('sprint starts', 'Sprint Starts'), ('code freeze','Code Freeze'), ('rc available for testing', 'RC available for Testing'), ('ga target', 'GA Target')]: #search for sprint starts and code freeze
             for release, date in self.get_dates(keyword).items(): #get the dates for each keyword
                 version = self.extract_version(release) #get the version number from the release name
                 if version:
@@ -28,7 +28,7 @@ class MetricsTool:
         return releases
 
     def extract_version(self, release_name): 
-        match = re.match(r'(\d+\.\d+)', release_name) #look for a version number in the format "X.Y" at the start of the release_name string using regex.
+        match = re.match(r'(\d+\.\d+)\s', release_name) #look for a version number in the format "X.Y" at the start of the release_name string using regex.
         return match.group(1) if match else None
 
     def get_closest_future_code_freeze_version(self):
@@ -54,9 +54,9 @@ class MetricsTool:
                 #assign start and end dates based on the title
                 if title == "Sprint Starts":
                     sprint_start_date = date
-                elif title == "RC available for QE":
+                elif title == "RC available for Testing":
                     rc_date = date
-                elif title == "GA":
+                elif title == "GA Target":
                     ga_date = date
             
         return sprint_start_date, rc_date, ga_date
@@ -68,7 +68,7 @@ def main():
     current_version = metrics.get_closest_future_code_freeze_version()
     print("\nCurrent Version:", current_version)
     sprint_start_date, rc_date, ga_date = metrics.print_release_dates(version=current_version)
-    print(f"{current_version} Sprint Starts: {sprint_start_date} and {current_version} RC available for QE: {rc_date} and {current_version} GA: {ga_date}")
+    print(f"{current_version} Sprint Starts: {sprint_start_date} and {current_version} RC available for Testing: {rc_date} and {current_version} GA Target: {ga_date}")
 
     # Set found_in_nightly label
     jira = JIRA('https://issues.redhat.com', token_auth=token)
@@ -78,7 +78,7 @@ def main():
         f'(type in (Bug)) AND '
         f'(component not in (Documentation, PXE)) AND '
         f'created >= "{sprint_start_date}" AND created < "{rc_date}" AND '
-        f'(labels NOT IN ("found_in_nightly", "RHOAI-releases", "RHOAI-internal", "pre-GA", "pre-RC") OR labels IS EMPTY) AND '
+        f'(labels NOT IN ("found_in_nightly", "found_in_rc", "RHOAI-releases", "RHOAI-internal", "pre-GA", "pre-RC") OR labels IS EMPTY) AND '
         f'(summary !~ "Snyk" AND summary !~ "CVE-*")'
     )
 
@@ -98,7 +98,7 @@ def main():
         f'(type in (Bug)) AND '
         f'(component not in (Documentation, PXE)) AND '
         f'created >= "{rc_date}" AND created < "{ga_date}" AND '
-        f'(labels NOT IN ("found_in_rc", "RHOAI-releases", "RHOAI-internal", "pre-GA", "pre-RC") OR labels IS EMPTY) AND '
+        f'(labels NOT IN ("found_in_rc", "found_in_nightly", "RHOAI-releases", "RHOAI-internal", "pre-GA", "pre-RC") OR labels IS EMPTY) AND '
         f'(summary !~ "Snyk" AND summary !~ "CVE-*")'
     )
 
