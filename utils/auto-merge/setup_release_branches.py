@@ -21,11 +21,22 @@ class setup_release_branches:
         for column in sheet.columns:
             column_map[column.title] = column.id
         # print(column_map)
+        # 0       1           2           3           4
+        # comment task name   duration    start date  end date
 
         # process existing data
-        sprintStartDates = {row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() for row in sheet.rows if row.cells[1].value and ('sprint starts' in str(row.cells[1].value).lower() or 'sprintstarts' in str(row.cells[1].value).lower() or 'sprint-starts' in str(row.cells[1].value).lower()) }
+        # ignore rows with blank task names or blank start dates
+        sprintStartDates = {
+                row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() 
+                for row in sheet.rows 
+                if row.cells[1].value 
+                    and row.cells[3].value 
+                    and re.match(r'sprint[\s-]*starts?', row.cells[1].value, re.IGNORECASE)
+                }
+
         print('sprintStartDates', sprintStartDates)
         return sprintStartDates
+
     def get_release_to_be_setup(self):
         dates_to_search = [datetime.today().date()]
         release_to_be_setup = ''
