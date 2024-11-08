@@ -17,6 +17,7 @@ UPDATE=
 IMAGE_URI=
 FULL_IMAGE_URI_WITH_DIGEST=
 TEXT_OUTPUT=
+if [[ -z $SKOPEO_TOKEN_FILE_PATH ]]; then SKOPEO_TOKEN_FILE_PATH=~/.ssh/.rhoai_quay_ro_token; fi
 
 function help() {
   echo "Usage: tracer.sh [-h] [-v] [-c] [-n] [-b] [configure] [update]"
@@ -86,7 +87,7 @@ done
 
 if [[ $CONFIGURE == "true" ]]
 then
-  auth=$(cat ~/.ssh/.rhoai_quay_ro_token | base64 -d)
+  auth=$(cat $SKOPEO_TOKEN_FILE_PATH | base64 -d)
   IFS=':' read -a parts <<< "$auth"
   skopeo login -u "${parts[0]}" -p "${parts[1]}" quay.io/rhoai
   exit
