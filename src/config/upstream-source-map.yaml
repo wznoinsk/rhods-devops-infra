@@ -184,7 +184,7 @@ git:
   automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/kserve.git
-    branch: release-v0.12.1
+    branch: release-v0.14
   dest:
     url: https://github.com/red-hat-data-services/kserve.git
     branch: master
