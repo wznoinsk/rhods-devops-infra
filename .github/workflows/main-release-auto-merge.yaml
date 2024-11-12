@@ -38,6 +38,7 @@ on:
           - must-gather
           - distributed-workloads
           - vllm
+          - vllm-gaudi
 
   schedule:
     - cron: '0 1 * * *'

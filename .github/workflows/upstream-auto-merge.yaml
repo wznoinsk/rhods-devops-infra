@@ -39,6 +39,7 @@ on:
           - trustyai-explainability
           - trustyai-service-operator
           - vllm
+          - vllm-gaudi
   workflow_call:
     inputs:
       repositories:
