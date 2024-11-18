@@ -26,7 +26,7 @@ def __validate_field_type(config, field_name, expected_type, filename):
 def validate_config_yaml(config):
     """
     Function to validate config.yaml file.
-      - Ensure that the required fields (name, repo-url, and nudged-file-path) are present.
+      - Ensure that the required fields (name, repo-url, and nudged-file-paths) are present.
       - Validate the data types of all fields.
 
     Parameters:
@@ -43,14 +43,17 @@ def validate_config_yaml(config):
     """
     
     filename = 'config.yaml'
-    required_fields = ['name', 'repo-url', 'nudged-file-path']
+    required_fields = ['name', 'repo-url', 'nudged-file-paths']
     optional_fields= ['onboarded-since', 'verify-components']
     
     try:
       for field in required_fields:
           if field not in config:
               raise ValueError(f"ValueError: Missing required field '{field}' in '{config['name']}'.")
-          __validate_field_type(config, field, str, filename)
+          if field == 'nudged-file-paths':
+            __validate_field_type(config, field, list, filename)
+          else:
+            __validate_field_type(config, field, str, filename)
 
       for field in optional_fields:
           if field in config:
