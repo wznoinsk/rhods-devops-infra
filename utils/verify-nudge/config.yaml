@@ -1,18 +1,28 @@
-######################################################################################################################
-# name              : Config name, usually the git repo name. [type='str']                                           #
-# repo-url          : URL of the git repository. [type='str']                                                        #
-# nudged-file-path  : Path to the nudged file from the repo root. [type='str']                                       #
-# onboarded-since   : (optional) Release where the component was onboarded. [type='str']                             #
-# verify-components : (optional) Components to verify from the nudged file. Verifies all if absent. [type='list']    #
-######################################################################################################################
-
 - name: kserve
   repo-url: https://github.com/red-hat-data-services/kserve.git
-  nudged-file-path: config/overlays/odh/params.env
+  nudged-file-paths: ["config/overlays/odh/params.env"]
 
 - name: odh-model-controller
   repo-url: https://github.com/red-hat-data-services/odh-model-controller.git
-  nudged-file-path: config/base/params.env
-  onboarded-since: rhoai-2.11
+  nudged-file-paths: ["config/base/params.env", "config/base/params-vllm-rocm.env", "config/base/params-vllm-gaudi.env"]
   verify-components:
-    - caikit-standalone-image
+    - name: caikit-standalone-image
+      onboarded-since: rhoai-2.11
+    - name: vllm-image
+      onboarded-since: rhoai-2.8
+      image-tag: rhoai-2.16-cuda
+    - name: vllm-rocm-image
+      onboarded-since: rhoai-2.16
+      image-tag: rhoai-2.16-rocm
+    - name: vllm-gaudi-image
+      onboarded-since: rhoai-2.16
+      image-tag: rhoai-2.16-gaudi
+
+- name: trustyai-service-operator
+  repo-url: https://github.com/red-hat-data-services/trustyai-service-operator.git
+  nudged-file-paths: ["config/overlays/rhoai/params.env"]
+  verify-components:
+    - name: lmes-driver-image
+      onboarded-since: rhoai-2.16
+    - name: lmes-pod-image
+      onboarded-since: rhoai-2.16
