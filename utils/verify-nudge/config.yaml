@@ -10,13 +10,13 @@
       onboarded-since: rhoai-2.11
     - name: vllm-image
       onboarded-since: rhoai-2.8
-      image-tag: rhoai-2.16-cuda
+      image-tag: ${release}-cuda
     - name: vllm-rocm-image
       onboarded-since: rhoai-2.16
-      image-tag: rhoai-2.16-rocm
+      image-tag: ${release}-rocm
     - name: vllm-gaudi-image
       onboarded-since: rhoai-2.16
-      image-tag: rhoai-2.16-gaudi
+      image-tag: ${release}-gaudi
 
 - name: trustyai-service-operator
   repo-url: https://github.com/red-hat-data-services/trustyai-service-operator.git
