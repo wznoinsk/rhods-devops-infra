@@ -375,4 +375,83 @@ def merge_files_content(files, output_file):
         
     return merged_file_path
 
+def send_slack_notification(quay_sha, image_sha, component_name, image_name):
+    """
+    Constructs a Slack notification message for SHA mismatch and sends it.
+
+    This function identifies discrepancies between the Quay SHA and Image SHA
+    for a specific component and image. It constructs a detailed message and
+    invokes the `sendToSlack` function to deliver the message via Slack.
+
+    Args:
+        quay_sha (str): The SHA digest retrieved from the Quay repository.
+        image_sha (str): The SHA digest retrieved from the image source.
+        component_name (str): The name of the component being validated.
+        image_name (str): The name of the image associated with the component.
+
+    Returns:
+        None
+
+    Raises:
+        Any exceptions from `sendToSlack` will propagate up to the caller.
+    """
+    slack_message = f"""
+    🚨 *Mismatch Detected!*
+    The following SHA values do not match:
     
+    *Component Name:* `{component_name}`
+    *Image Name:* `{image_name}`
+    *Quay SHA:* `{quay_sha}`
+    *Image SHA:* `{image_sha}`
+    
+    Please investigate this discrepancy.
+    """
+
+    # Send the message to Slack
+    send_to_slack(slack_message)
+
+
+def send_to_slack(message):
+    """
+    Sends a message to a Slack channel using a webhook URL.
+
+    This function posts the given message to Slack via an incoming webhook.
+    The webhook URL is retrieved from the `SLACK_WEBHOOK_URL` environment variable.
+    If the webhook URL is not set or the Slack API returns an error, the function
+    raises appropriate exceptions.
+
+    Args:
+        message (str): The message to be sent to Slack. Should be formatted in
+                       Markdown for better presentation.
+
+    Returns:
+        None
+
+    Raises:
+        EnvironmentError: If the `SLACK_WEBHOOK_URL` environment variable is not set.
+        ValueError: If the Slack API returns a non-200 HTTP status code.
+
+    Example:
+        To send a message:
+        ```python
+        sendToSlack("This is a test message!")
+        ```
+    """
+    webhook_url = os.getenv("RHOAI_DEVOPS_SLACK_WEBHOOK")
+
+    if not webhook_url:
+        raise EnvironmentError("RHOAI_DEVOPS_SLACK_WEBHOOK is not set in the environment.")
+
+    slack_payload = {
+        "text": message
+    }
+
+    response = requests.post(
+        webhook_url, json=slack_payload,
+        headers={'Content-Type': 'application/json'}
+    )
+
+    if response.status_code != 200:
+        raise ValueError(
+            f"Request to Slack returned an error {response.status_code}, the response is:\n{response.text}"
+    )

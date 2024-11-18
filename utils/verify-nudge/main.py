@@ -170,6 +170,7 @@ def is_nudging_correct(release, config):
                 if quay_sha != image_sha:
                     color = 'red'
                     mismatch_found = True
+                    util.send_slack_notification(quay_sha,image_sha,component_name,image_name)
                 else:
                     color = 'green'
                     
