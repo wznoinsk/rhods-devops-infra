@@ -31,6 +31,8 @@ jobs:
         run: cd utils/verify-nudge && pipenv install --ignore-pipfile
 
       - name: Verify Nudges
+        env:
+          SLACK_WEBHOOK: ${{ secrets.RHOAI_DEVOPS_SLACK_WEBHOOK }}
         run: |
           cd utils/verify-nudge
           if [ -n "${{ github.event.inputs.rhoai-releases }}" ]; then
