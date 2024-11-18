@@ -437,10 +437,10 @@ def send_to_slack(message):
         sendToSlack("This is a test message!")
         ```
     """
-    webhook_url = os.getenv("RHOAI_DEVOPS_SLACK_WEBHOOK")
+    webhook_url = os.getenv("SLACK_WEBHOOK")
 
     if not webhook_url:
-        raise EnvironmentError("RHOAI_DEVOPS_SLACK_WEBHOOK is not set in the environment.")
+        raise EnvironmentError("SLACK_WEBHOOK is not set in the environment.")
 
     slack_payload = {
         "text": message
