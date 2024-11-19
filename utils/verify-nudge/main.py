@@ -56,7 +56,7 @@ def get_rhoai_releases():
         url = "https://raw.githubusercontent.com/red-hat-data-services/rhoai-disconnected-install-helper/main/releases.yaml"
         
         file_path = util.download_file(filename, url)
-        rhoai_releases = util.parse_yaml(file_path)
+        rhoai_releases = util.parse_yaml(file_path, '')
         validator.validate_releases_yaml(rhoai_releases)
         
     return rhoai_releases
