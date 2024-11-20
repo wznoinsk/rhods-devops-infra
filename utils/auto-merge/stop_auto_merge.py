@@ -29,7 +29,7 @@ class stop_auto_merge:
 		for row in sheet.rows 
 		if row.cells[3].value 
 			and row.cells[1].value 
-			and re.match(r'code[\s-]*freeze', str(row.cells[1].value), re.IGNORECASE)
+			and re.search(r'code[\s-]*freeze', str(row.cells[1].value), re.IGNORECASE)
 	}
         print('codeFreezeDates', codeFreezeDates)
         return codeFreezeDates
