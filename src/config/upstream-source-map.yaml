@@ -90,6 +90,14 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/argo-workflows.git
     branch: main
+- name: ilab-on-ocp
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/ilab-on-ocp.git
+    branch: main
+  dest:
+    url: https://github.com/red-hat-data-services/ilab-on-ocp.git
+    branch: main
 - name: trustyai-explainability
   automerge: 'no'
   src:
