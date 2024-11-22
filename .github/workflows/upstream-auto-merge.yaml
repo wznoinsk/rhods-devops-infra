@@ -19,6 +19,7 @@ on:
           - distributed-workloads
           - fms-hf-tuning-dev
           - fms-hf-tuning-release
+          - ilab-on-ocp
           - kserve
           - kubeflow
           - kuberay
