@@ -28,7 +28,7 @@ git:
   ignore-files: config/base/params.env 
   src:
     url: https://github.com/opendatahub-io/odh-model-controller.git
-    branch: release-0.12.0
+    branch: main
   dest:
     url: https://github.com/red-hat-data-services/odh-model-controller.git
     branch: main
