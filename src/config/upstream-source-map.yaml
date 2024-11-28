@@ -14,7 +14,7 @@ git:
     branch: v1.9-branch
   dest:
     url: https://github.com/red-hat-data-services/kubeflow.git
-    branch: master
+    branch: main
 - name: modelmesh-serving
   automerge: 'yes'
   src:
@@ -63,7 +63,7 @@ git:
     branch: master
   dest:
     url: https://github.com/red-hat-data-services/data-science-pipelines-tekton.git
-    branch: master
+    branch: main
 - name: data-science-pipelines
   automerge: 'yes'
   ignore-files: .github/renovate.json5
@@ -72,7 +72,7 @@ git:
     branch: stable
   dest:
     url: https://github.com/red-hat-data-services/data-science-pipelines.git
-    branch: master
+    branch: main
 - name: data-science-pipelines-operator
   automerge: 'yes'
   src:
