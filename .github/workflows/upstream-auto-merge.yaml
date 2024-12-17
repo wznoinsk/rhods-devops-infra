@@ -23,6 +23,7 @@ on:
           - kserve
           - kubeflow
           - kuberay
+          - kueue
           - lm-evaluation-harness
           - modelmesh
           - modelmesh-runtime-adapter
@@ -36,6 +37,7 @@ on:
           - opendatahub-operator
           - rest-proxy
           - rhods-operator
+          - training-operator
           - text-generation-inference
           - trustyai-explainability
           - trustyai-service-operator
