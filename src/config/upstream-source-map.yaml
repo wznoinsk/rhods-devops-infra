@@ -141,13 +141,29 @@ git:
     branch: main
   ignore-files: codeflare-stack/base/params.env
 - name: kuberay
-  automerge: 'no'
+  automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/kuberay.git
-    branch: master
+    branch: dev
   dest:
     url: https://github.com/red-hat-data-services/kuberay.git
-    branch: master
+    branch: main
+- name: kueue
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/kueue.git
+    branch: dev
+  dest:
+    url: https://github.com/red-hat-data-services/kueue.git
+    branch: main
+- name: training-operator
+  automerge: 'yes'
+  src:
+    url: https://github.com/opendatahub-io/training-operator.git
+    branch: dev
+  dest:
+    url: https://github.com/red-hat-data-services/training-operator.git
+    branch: main
 - name: text-generation-inference
   automerge: 'yes'
   src:
