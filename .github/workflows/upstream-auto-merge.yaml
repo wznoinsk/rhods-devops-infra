@@ -8,6 +8,7 @@ on:
         description: select repositories
         options:
           - all
+          - kserve-sync-test
           - argo-workflows
           - caikit-nlp
           - caikit-tgis-serving
