@@ -1,0 +1,14 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Release
+metadata:
+  name: rhoai-fbc-addon-{{ocp-version}}-stage-{{epoch}}
+  namespace: rhoai-tenant
+  labels:
+    konflux-release-data/rbc-release-commit: {{rbc_release_commit}}
+    konflux-release-data/ocp-version: {{ocp-version}}
+    konflux-release-data/artifact-type: fbc
+    konflux-release-data/environment: stage
+spec:
+  gracePeriodDays: 30
+  releasePlan: rhoai-addon-{{hyphenized-rhoai-version}}-{{ocp-version}}-fbc-stage
+  snapshot: {{fbc_application}}-{{epoch}}
