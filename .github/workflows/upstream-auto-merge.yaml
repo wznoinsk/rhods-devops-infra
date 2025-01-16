@@ -129,6 +129,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           ignore_files: "${{ matrix.mapping.ignore-files }}"
           merge_args: "--no-edit"
+          push_tags: "${{ matrix.mapping.push_tags }}"
 
       - name: Slack Notification
         if: ${{ failure() }}

@@ -188,6 +188,7 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/caikit-nlp.git
     branch: main
+  push_tags: "refs/tags/v*"
 - name: model-registry
   automerge: 'no'
   src:
@@ -253,6 +254,7 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/vllm.git
     branch: main
+  push_tags: "refs/tags/v*"
 - name: lm-evaluation-harness
   automerge: 'yes'
   src:
