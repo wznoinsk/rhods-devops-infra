@@ -45,9 +45,14 @@ class stop_auto_merge:
         codeFreezeDates = self.get_code_freeze_dates()
         for event, dt in codeFreezeDates.items():
             if dt in dates_to_search:
+
                 capture = re.search('2.([0-9]{1,2})[a-zA-Z\s]{1,20}', event)
-                release_to_be_removed = f'rhoai-2.{capture.group(1)}'
-                break
+                if capture:
+                  release_to_be_removed = f'rhoai-2.{capture.group(1)}'
+                  break
+                else:
+                  print(f"warning: Event '{event}' on '{dt}' does not appear to be a minor (2.Y) release. Skipping.")
+
         print('release_to_be_removed', release_to_be_removed)
         print('dates_to_search', dates_to_search)
         return release_to_be_removed
