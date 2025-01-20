@@ -59,7 +59,10 @@ class release_processor:
 
     def parse_catalog_yaml(self):
         # objs = yaml.safe_load_all(open(self.catalog_yaml_path))
-        objs = ruyaml.load_all(open(self.catalog_yaml_path), Loader=ruyaml.RoundTripLoader, preserve_quotes=True)
+        # objs = ruyaml.load_all(open(self.catalog_yaml_path), Loader=ruyaml.RoundTripLoader, preserve_quotes=True)
+        YAML = ruyaml.YAML(typ='rt')
+        YAML.preserve_quotes = True
+        objs = YAML.load_all(open(self.catalog_yaml_path))
         catalog_dict = defaultdict(dict)
         for obj in objs:
             catalog_dict[obj['schema']][obj['name']] = obj
