@@ -19,3 +19,5 @@ Setup & Prerequisites
 * Make sure you have “yq” installed
 * Create a file “~/.ssh/.quay_devops_application_token” with the contents as the secret value from of the quay application token
 * Clone https://github.com/rhoai-rhtap/RHOAI-Konflux-Automation to your machine
+* Install the requirements.txt dependencies using pip
+
