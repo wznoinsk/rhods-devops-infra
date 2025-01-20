@@ -19,5 +19,12 @@ Setup & Prerequisites
 * Make sure you have “yq” installed
 * Create a file “~/.ssh/.quay_devops_application_token” with the contents as the secret value from of the quay application token
 * Clone https://github.com/rhoai-rhtap/RHOAI-Konflux-Automation to your machine
-* Install the requirements.txt dependencies using pip
 
+Nightly Override Snapshot Generator
+-----
+* cd into `tools/rhoai-release-helper` 
+* run `python -m venv venv` (or `python3 -m venv venv`)
+* `source venv/bin/activate`
+* `pip install -r requirements.txt`
+* make sure you have the quay token set up according to the section above
+* run `bash generate-nightly-override-snapshot.sh`
