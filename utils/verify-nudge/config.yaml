@@ -1,6 +1,11 @@
 - name: kserve
   repo-url: https://github.com/red-hat-data-services/kserve.git
   nudged-file-paths: ["config/overlays/odh/params.env"]
+  verify-components:
+    - name: kserve-controller
+    - name: kserve-agent
+    - name: kserve-router
+    - name: kserve-storage-initializer
 
 - name: odh-model-controller
   repo-url: https://github.com/red-hat-data-services/odh-model-controller.git
