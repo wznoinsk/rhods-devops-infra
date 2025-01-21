@@ -1,11 +1,39 @@
 #!/bin/bash
 #Prerequisites
-# yq
-# ~/.ssh/.quay_devops_application_token
+# jq
 
-release_branch=rhoai-2.17
-rhoai_version=2.17.0
-hyphenized_rhoai_version=v2-17
+function help {
+cat <<EOF
+RHOAI_QUAY_API_TOKEN=TOKEN_PATH ./generate-nightly-override-snapshot.sh RHOAI_VERSION
+  TOKEN_PATH - path to the quay API token
+  RHOAI_VERSION - the full version of the nightly you want to generate, in the form X.Y.Z. (example: 2.17.0)
+EOF
+}
+
+if [ "$1" = "-h" -o "$1" = "--help" ]; then
+  help
+  exit 0
+fi
+
+if [ -z "$RHOAI_QUAY_API_TOKEN" ]; then
+  echo "Please set the environment variable RHOAI_QUAY_API_TOKEN"
+  help
+  exit 1
+fi
+
+# example: 2.17.0
+rhoai_version=$1
+
+if [ -z "$rhoai_version" ]; then
+  echo "Please indicate which RHOAI version for the snapshot"
+  help
+  exit 1
+fi
+
+# rhoai-2.17
+release_branch=$(echo "$rhoai_version" | awk -F '.' '{ print "rhoai-" $1 "." $2}')
+# v2-17
+hyphenized_rhoai_version=y=$(echo "$rhoai_version" | awk -F '.' '{ print "v" $1 "-" $2}')
 
 
 FBC_QUAY_REPO=quay.io/rhoai/rhoai-fbc-fragment
@@ -28,7 +56,6 @@ component_application=rhoai-${hyphenized_rhoai_version}
 
 fbc_application_prefix=rhoai-fbc-fragment-ocp-
 
-RHOAI_QUAY_API_TOKEN=$(cat ~/.ssh/.quay_devops_application_token)
 
 current_dir=$(pwd)
 #workspace=/tmp/tmp.68Vts9xj27
@@ -47,9 +74,6 @@ mkdir -p ${snapshot_components_dir}
 
 template_dir=templates/stage
 
-#RBC_RELEASE_BRANCH_COMMIT=7da42450e089babe0dc31f182e78152c349f201a
-
-
 RBC_RELEASE_DIR=${workspace}/RBC_${release_branch}_commit
 V417_CATALOG_YAML_PATH=catalog/v4.17/rhods-operator/catalog.yaml
 mkdir -p ${RBC_RELEASE_DIR}
@@ -60,7 +84,7 @@ git init -q
 git remote add origin $RBC_URL
 git config core.sparseCheckout true
 git config core.sparseCheckoutClone false
-mkdir .git/info
+mkdir -p .git/info
 echo "${V417_CATALOG_YAML_PATH}" >> .git/info/sparse-checkout
 git fetch -q --depth=1 origin ${RBC_RELEASE_BRANCH_COMMIT}
 git checkout -q ${RBC_RELEASE_BRANCH_COMMIT}
@@ -82,6 +106,6 @@ RHOAI_QUAY_API_TOKEN=${RHOAI_QUAY_API_TOKEN} python release_processor.py --opera
 cd ${release_artifacts_dir}
 
 #Create components snapshot
-oc apply -f "snapshot-components/snapshot-components-stage-${component_application}-${epoch}.yaml"
+kubectl apply -f "snapshot-components/snapshot-components-stage-${component_application}-${epoch}.yaml"
 
 cd ${current_dir}
