@@ -182,7 +182,7 @@ def is_nudging_correct(release, config):
                 util.colored_print(f"ValueError: Invalid Image reference found in '{nudged_file_url}'.", "light_red")
                 print()
                 util.colored_print(f"Image '{image_name}' is not from 'modh' quay repo!", "red")
-                # exit(1)
+                exit(1)
             
     return mismatch_found
 
