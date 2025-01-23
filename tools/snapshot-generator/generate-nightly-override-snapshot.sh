@@ -65,7 +65,7 @@ workspace=$(mktemp -d)
 echo "workspace=${workspace}"
 
 epoch=$(date +%s)
-release_artifacts_dir=nightly-snapshots-${SHORT_COMMIT}
+release_artifacts_dir=nightly-snapshots
 release_components_dir=${release_artifacts_dir}/release-components
 snapshot_components_dir=${release_artifacts_dir}/snapshot-components
 
