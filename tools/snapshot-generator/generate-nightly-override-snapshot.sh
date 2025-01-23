@@ -106,6 +106,10 @@ RHOAI_QUAY_API_TOKEN=${RHOAI_QUAY_API_TOKEN} python release_processor.py --opera
 cd ${release_artifacts_dir}
 
 #Create components snapshot
-kubectl apply -f "snapshot-components/snapshot-components-stage-${component_application}-${epoch}.yaml"
+if [ -z "$RHOAI_K8S_TOKEN" ]; then
+  kubectl apply --token "$RHOAI_K8S_TOKEN" -f "snapshot-components/snapshot-components-stage-${component_application}-${epoch}.yaml"
+else
+  kubectl apply -f "snapshot-components/snapshot-components-stage-${component_application}-${epoch}.yaml"
+fi
 
 cd ${current_dir}
