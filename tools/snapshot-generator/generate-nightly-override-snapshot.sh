@@ -103,13 +103,3 @@ kubectl get components -o=jsonpath="{range .items[?(@.spec.application=='${compo
 RHOAI_QUAY_API_TOKEN=${RHOAI_QUAY_API_TOKEN} python release_processor.py --operation generate-release-artifacts --catalog-yaml-path ${CATALOG_YAML_PATH} --konflux-components-details-file-path ${RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH} --rhoai-version ${rhoai_version} --rhoai-application ${component_application} --epoch ${epoch} --output-dir ${release_artifacts_dir} --template-dir ${template_dir} --rbc-release-commit ${RBC_RELEASE_BRANCH_COMMIT}
 
 
-cd ${release_artifacts_dir}
-
-#Create components snapshot
-if [ -z "$RHOAI_K8S_TOKEN" ]; then
-  kubectl apply --token "$RHOAI_K8S_TOKEN" -f "snapshot-components/snapshot-components-stage-${component_application}-${epoch}.yaml"
-else
-  kubectl apply -f "snapshot-components/snapshot-components-stage-${component_application}-${epoch}.yaml"
-fi
-
-cd ${current_dir}
