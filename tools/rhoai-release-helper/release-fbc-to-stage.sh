@@ -13,6 +13,8 @@ image_uri=LATEST_NIGHTLY
 FBC_QUAY_REPO=quay.io/rhoai/rhoai-fbc-fragment
 RBC_URL=https://github.com/red-hat-data-services/RHOAI-Build-Config
 
+IFS='.' read -a parts <<< "$rhoai_version"
+micro_version=${parts[2]}
 
 if [[ $image_uri == LATEST_NIGHTLY ]]; then image_uri=docker://${FBC_QUAY_REPO}:${release_branch}-nightly; fi
 if [[ "$image_uri" != docker* ]]; then image_uri="docker://${image_uri}"; fi
@@ -106,7 +108,8 @@ fbc_application_tag=ocp-${first_ocp_version/v4/4}-${release_branch}
     sed -i "s/{{hyphenized-rhoai-version}}/${hyphenized_rhoai_version}/g" ${fbc_release_yaml_path}
     sed -i "s/{{rbc_release_commit}}/${RBC_RELEASE_BRANCH_COMMIT}/g" ${fbc_release_yaml_path}
 
-    if [[ "${fbc_application_suffix}" == "416" ]]
+    #addon FBC release will be created only for minor versions
+    if [[ "${fbc_application_suffix}" == "416" ]] && [[ $micro_version -eq 0 ]]
     then
       fbc_addon_release_yaml_path=${release_fbc_addon_dir}/release-fbc-addon-stage-ocp-${fbc_application_suffix}-${component_application}-${epoch}.yaml
       cp ${template_dir}/release-fbc-addon-stage.yaml ${fbc_addon_release_yaml_path}
