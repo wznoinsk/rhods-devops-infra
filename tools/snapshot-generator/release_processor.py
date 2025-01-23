@@ -169,6 +169,7 @@ class quay_controller:
         headers = {'Authorization': f'Bearer {os.environ[self.org.upper() + "_QUAY_API_TOKEN"]}',
                    'Accept': 'application/json'}
         response = requests.get(url, headers=headers)
+        print(response.json())
         tags = response.json()['tags']
         if tags:
             result_tag = tags[0]
