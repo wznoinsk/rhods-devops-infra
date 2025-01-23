@@ -42,7 +42,7 @@ jobs:
           do
             version_number=${release/rhoai-/}
             version_number=${version_number/./}
-            if [[ $version_number -ge $min_release ]]
+            if [[ $version_number -ge $min_release ]] || [[ $version_number -eq 213 ]]
             then
               filtered_releases+=("$release")
             fi
