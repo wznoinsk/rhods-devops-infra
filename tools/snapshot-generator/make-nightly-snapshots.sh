@@ -33,7 +33,7 @@ fi
 # rhoai-2.17
 release_branch=$(echo "$rhoai_version" | awk -F '.' '{ print "rhoai-" $1 "." $2}')
 # v2-17
-hyphenized_rhoai_version=y=$(echo "$rhoai_version" | awk -F '.' '{ print "v" $1 "-" $2}')
+hyphenized_rhoai_version=$(echo "$rhoai_version" | awk -F '.' '{ print "v" $1 "-" $2}')
 
 
 FBC_QUAY_REPO=quay.io/rhoai/rhoai-fbc-fragment
@@ -41,7 +41,8 @@ RBC_URL=https://github.com/red-hat-data-services/RHOAI-Build-Config
 
 image_uri=docker://${FBC_QUAY_REPO}:${release_branch}-nightly
 
-META=$(skopeo inspect "${image_uri}")
+skopeo login -u '$oauthtoken' -p "$RHOAI_QUAY_API_TOKEN"
+META=$(skopeo inspect --no-tags "${image_uri}")
 DIGEST=$(echo $META | jq -r .Digest)
 image_uri=${FBC_QUAY_REPO}@${DIGEST}
 RBC_RELEASE_BRANCH_COMMIT=$(echo $META | jq -r '.Labels | ."git.commit"')
@@ -54,6 +55,7 @@ echo "starting to create the artifacts corresponding to the sourcecode at ${RBC_
 
 component_application=rhoai-${hyphenized_rhoai_version}
 
+echo "component application: $component_application"
 fbc_application_prefix=rhoai-fbc-fragment-ocp-
 
 
@@ -66,11 +68,11 @@ echo "workspace=${workspace}"
 
 epoch=$(date +%s)
 release_artifacts_dir=nightly-snapshots
-release_components_dir=${release_artifacts_dir}/release-components
 snapshot_components_dir=${release_artifacts_dir}/snapshot-components
+snapshot_fbc_dir=${release_artifacts_dir}/snapshot-fbc
 
-mkdir -p ${release_components_dir}
 mkdir -p ${snapshot_components_dir}
+mkdir -p ${snapshot_fbc_dir}
 
 template_dir=templates/stage
 
@@ -86,13 +88,13 @@ git config core.sparseCheckout true
 git config core.sparseCheckoutClone false
 mkdir -p .git/info
 echo "${V417_CATALOG_YAML_PATH}" >> .git/info/sparse-checkout
+echo "config/build-config.yaml" >> .git/info/sparse-checkout
 git fetch -q --depth=1 origin ${RBC_RELEASE_BRANCH_COMMIT}
 git checkout -q ${RBC_RELEASE_BRANCH_COMMIT}
 CATALOG_YAML_PATH=${RBC_RELEASE_DIR}/${V417_CATALOG_YAML_PATH}
+BUILD_CONFIG_PATH=${RBC_RELEASE_DIR}/config/build-config.yaml
 cd ${current_dir}
 
-RBC_RELEASE_DIR=${workspace}/RBC_${release_branch}_commit
-V417_CATALOG_YAML_PATH=catalog/v4.17/rhods-operator/catalog.yaml
 CATALOG_YAML_PATH=${RBC_RELEASE_DIR}/${V417_CATALOG_YAML_PATH}
 
 RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH=${workspace}/konflux_components.txt
@@ -100,6 +102,6 @@ RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH=${workspace}/konflux_components.txt
 kubectl get components -o=jsonpath="{range .items[?(@.spec.application=='${component_application}')]}{@.metadata.name}{'\t'}{@.spec.containerImage}{'\n'}{end}" > ${RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH}
 
 
-RHOAI_QUAY_API_TOKEN=${RHOAI_QUAY_API_TOKEN} python release_processor.py --operation generate-release-artifacts --catalog-yaml-path ${CATALOG_YAML_PATH} --konflux-components-details-file-path ${RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH} --rhoai-version ${rhoai_version} --rhoai-application ${component_application} --epoch ${epoch} --output-dir ${release_artifacts_dir} --template-dir ${template_dir} --rbc-release-commit ${RBC_RELEASE_BRANCH_COMMIT}
+RHOAI_QUAY_API_TOKEN=${RHOAI_QUAY_API_TOKEN} python release_processor.py --operation generate-snapshots --catalog-yaml-path ${CATALOG_YAML_PATH} --konflux-components-details-file-path ${RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH} --rhoai-version ${rhoai_version} --rhoai-application ${component_application} --epoch ${epoch} --output-dir ${release_artifacts_dir} --template-dir ${template_dir} --rbc-release-commit ${RBC_RELEASE_BRANCH_COMMIT}
 
 

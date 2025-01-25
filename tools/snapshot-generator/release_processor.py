@@ -168,11 +168,9 @@ class quay_controller:
         url = f'{BASE_URL}/repository/{self.org}/{repo}/tag/?specificTag={tag}&onlyActiveTags=true'
         headers = {'Authorization': f'Bearer {os.environ[self.org.upper() + "_QUAY_API_TOKEN"]}',
                    'Accept': 'application/json'}
-        response = requests.get(url, headers=headers)
-        print(response.json())
-        tags = response.json()['tags']
-        if tags:
-            result_tag = tags[0]
+        response = requests.get(url, headers=headers).json()
+        if 'tags' in response:
+            result_tag = response['tags'][0]
         return result_tag
     def get_all_tags(self, repo, tag):
         url = f'{BASE_URL}/repository/{self.org}/{repo}/tag/?specificTag={tag}&onlyActiveTags=false'
@@ -235,6 +233,11 @@ if __name__ == '__main__':
     if args.operation.lower() == 'generate-release-artifacts':
         processor = release_processor(catalog_yaml_path=args.catalog_yaml_path, konflux_components_details_file_path=args.konflux_components_details_file_path, rhoai_version=args.rhoai_version, output_dir=args.output_dir, rhoai_application=args.rhoai_application, epoch=args.epoch, template_dir=args.template_dir, rbc_release_commit=args.rbc_release_commit)
         processor.generate_release_artifacts()
+    elif args.operation.lower() == 'generate-snapshots':
+        processor = release_processor(catalog_yaml_path=args.catalog_yaml_path, konflux_components_details_file_path=args.konflux_components_details_file_path, rhoai_version=args.rhoai_version, output_dir=args.output_dir, rhoai_application=args.rhoai_application, epoch=args.epoch, template_dir=args.template_dir, rbc_release_commit=args.rbc_release_commit)
+        processor.extract_rhoai_images_from_catalog()
+        processor.generate_component_snapshot()
+
     elif args.operation.lower() == 'validate-snapshot-with-catalog':
         processor = release_processor(catalog_yaml_path=args.catalog_yaml_path, konflux_components_details_file_path=args.konflux_components_details_file_path, snapshot_file_path=args.snapshot_file_path, rhoai_version=args.rhoai_version, output_dir=None, rhoai_application=args.rhoai_application, epoch='', template_dir=None, rbc_release_commit=None)
         processor.validate_snapshot_with_catalog()
