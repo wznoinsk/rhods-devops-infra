@@ -6,8 +6,7 @@ enabled=1
 gpgcheck=1
 gpgkey=https://pkgs.k8s.io/core:/stable:/v1.32/rpm/repodata/repomd.xml.key
 EOF
-microdnf install shadow-utils
-microdnf install python3.12 kubectl jq skopeo git 
+dnf install python3.12 kubectl jq skopeo git -y
 
 python3 -m venv venv
 source venv/bin/activate
