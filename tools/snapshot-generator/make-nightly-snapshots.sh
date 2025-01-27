@@ -41,7 +41,7 @@ RBC_URL=https://github.com/red-hat-data-services/RHOAI-Build-Config
 
 image_uri=docker://${FBC_QUAY_REPO}:${release_branch}-nightly
 
-skopeo login -u '$oauthtoken' -p "$RHOAI_QUAY_API_TOKEN"
+skopeo login -u '$oauthtoken' -p "$RHOAI_QUAY_API_TOKEN" quay.io/rhoai
 META=$(skopeo inspect --no-tags "${image_uri}")
 DIGEST=$(echo $META | jq -r .Digest)
 image_uri=${FBC_QUAY_REPO}@${DIGEST}
