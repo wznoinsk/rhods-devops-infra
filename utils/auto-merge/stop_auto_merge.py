@@ -63,6 +63,9 @@ class stop_auto_merge:
             print(f'removing {release_to_be_removed} from the config')
             if release_to_be_removed in release_map['releases']:
                 release_map['releases'].remove(release_to_be_removed)
+	    # If there are no releases, ensure it remains an empty list
+	    if release_map['releases'] is None:
+	        release_map['releases'] = []
             print('release_map', release_map)
         yaml.dump(release_map, open('src/config/releases.yaml', 'w'))
 
