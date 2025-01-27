@@ -263,12 +263,3 @@ git:
   dest:
     url: https://github.com/red-hat-data-services/lm-evaluation-harness.git
     branch: main
-- name: kserve-sync-test
-  automerge: 'yes'
-  src:
-    url: https://github.com/opendatahub-io/kserve.git
-    branch: sync-test
-  dest:
-    url: https://github.com/red-hat-data-services/kserve.git
-    branch: sync-test
-  ignore-files: "config/overlays/odh/params.env, .github/CODEOWNERS"
