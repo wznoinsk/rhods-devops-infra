@@ -58,6 +58,9 @@ class setup_release_branches:
         release_map = yaml.load(open('src/config/releases.yaml'))
         if release_to_be_setup:
             print(f'adding {release_to_be_setup} to the config')
+            # Initialize releases as empty list if it is None
+            if release_map['releases'] is None:
+                release_map['releases'] = []
             if release_to_be_setup not in release_map['releases']:
                 release_map['releases'].append(release_to_be_setup)
             print('release_map', release_map)
