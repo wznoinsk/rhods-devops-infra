@@ -25,12 +25,12 @@ class stop_auto_merge:
 
         # process existing data
         codeFreezeDates = {
-		row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() 
-		for row in sheet.rows 
-		if row.cells[3].value 
-			and row.cells[1].value 
-			and re.search(r'code[\s-]*freeze', str(row.cells[1].value), re.IGNORECASE)
-	}
+        row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() 
+        for row in sheet.rows 
+        if row.cells[3].value 
+            and row.cells[1].value 
+            and re.search(r'code[\s-]*freeze', str(row.cells[1].value), re.IGNORECASE)
+    }
         print('codeFreezeDates', codeFreezeDates)
         return codeFreezeDates
     def get_release_to_be_removed(self):
@@ -63,9 +63,9 @@ class stop_auto_merge:
             print(f'removing {release_to_be_removed} from the config')
             if release_to_be_removed in release_map['releases']:
                 release_map['releases'].remove(release_to_be_removed)
-	    # If there are no releases, ensure it remains an empty list
-	    if release_map['releases'] is None:
-	        release_map['releases'] = []
+        # If there are no releases, ensure it remains an empty list
+        if release_map['releases'] is None:
+            release_map['releases'] = []
             print('release_map', release_map)
         yaml.dump(release_map, open('src/config/releases.yaml', 'w'))
 
