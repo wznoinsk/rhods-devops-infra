@@ -25,12 +25,12 @@ class stop_auto_merge:
 
         # process existing data
         codeFreezeDates = {
-        row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() 
-        for row in sheet.rows 
-        if row.cells[3].value 
-            and row.cells[1].value 
-            and re.search(r'code[\s-]*freeze', str(row.cells[1].value), re.IGNORECASE)
-    }
+            row.cells[1].value: datetime.strptime(row.cells[3].value, '%Y-%m-%dT%H:%M:%S').date() 
+            for row in sheet.rows 
+            if row.cells[3].value 
+                and row.cells[1].value 
+                and re.search(r'code[\s-]*freeze', str(row.cells[1].value), re.IGNORECASE)
+        }
         print('codeFreezeDates', codeFreezeDates)
         return codeFreezeDates
     def get_release_to_be_removed(self):
@@ -48,10 +48,10 @@ class stop_auto_merge:
 
                 capture = re.search('2.([0-9]{1,2})[a-zA-Z\s]{1,20}', event)
                 if capture:
-                  release_to_be_removed = f'rhoai-2.{capture.group(1)}'
-                  break
+                    release_to_be_removed = f'rhoai-2.{capture.group(1)}'
+                    break
                 else:
-                  print(f"warning: Event '{event}' on '{dt}' does not appear to be a minor (2.Y) release. Skipping.")
+                    print(f"warning: Event '{event}' on '{dt}' does not appear to be a minor (2.Y) release. Skipping.")
 
         print('release_to_be_removed', release_to_be_removed)
         print('dates_to_search', dates_to_search)
