@@ -23,12 +23,6 @@ fi
 
 # example: 2.17.0
 rhoai_version=$1
-shift
-
-output_file=
-if [ "$1" = "-o" ]; then
- output_file=$2 
-fi
 
 if [ -z "$rhoai_version" ]; then
   echo "Please indicate which RHOAI version for the snapshot"
@@ -110,5 +104,4 @@ kubectl get components -o=jsonpath="{range .items[?(@.spec.application=='${compo
 
 RHOAI_QUAY_API_TOKEN=${RHOAI_QUAY_API_TOKEN} python release_processor.py --operation generate-snapshots --catalog-yaml-path ${CATALOG_YAML_PATH} --konflux-components-details-file-path ${RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH} --rhoai-version ${rhoai_version} --rhoai-application ${component_application} --epoch ${epoch} --output-dir ${output_dir} --template-dir ${template_dir} --rbc-release-commit ${RBC_RELEASE_BRANCH_COMMIT}
 
-cp ${snapshot_components_dir}/snapshot-components-stage-${component_application}-$epoch.yaml $output_file
 
