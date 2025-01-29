@@ -102,3 +102,7 @@ git:
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/lm-evaluation-harness.git
   ignore-files: '.tekton/*'
+- name: fms-guardrails-orchestrator
+  automerge: 'yes'
+  repo-url: https://github.com/red-hat-data-services/fms-guardrails-orchestrator.git
+  ignore-files: '.tekton/*'
