@@ -1,4 +1,4 @@
-name: Trigger Nightly Build
+name: Trigger Snapshots for Nightlies
 
 on:
   schedule:
