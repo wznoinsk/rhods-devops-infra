@@ -52,7 +52,7 @@ jobs:
       - name: clone ec-reporter repo
         uses: actions/checkout@v3
         with:
-          name: {{ env.GITHUB_ORG }}/EC-Reporter
+          name: ${{ env.GITHUB_ORG }}/EC-Reporter
           token: ${{ steps.app-token.outputs.token }}
         run: |
           pwd
