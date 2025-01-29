@@ -90,6 +90,7 @@ jobs:
         GLOBAL_IGNORE_LIST: ".github/renovate.json"
     needs: [ setup ]
     runs-on: ubuntu-latest
+    if: ${{ needs.setup.outputs.releases != '[]' ||  needs.setup.outputs.releases != 'null' }}
     strategy:
       fail-fast: false
       matrix:
