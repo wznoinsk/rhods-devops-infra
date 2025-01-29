@@ -54,6 +54,7 @@ jobs:
         with:
           name: ${{ env.GITHUB_ORG }}/EC-Reporter
           token: ${{ steps.app-token.outputs.token }}
+      - name: update ec-reporter
         run: |
           pwd
           ls
