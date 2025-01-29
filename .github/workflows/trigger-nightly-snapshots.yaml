@@ -1,0 +1,64 @@
+name: Trigger Nightly Build
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        type: string
+        description: Full RHOAI version number X.Y.Z
+
+env:
+  GITHUB_ORG: red-hat-data-services
+  SOURCE_MAP: "src/config/releases.yaml"
+
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      releases: ${{ steps.extract.outputs.releases }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Extract all versions
+        id: extract
+        run: |
+          if [[ "${{ github.event_name  }}" == "workflow_dispatch" ]]
+          then
+            versions="[ ${{ github.event.inputs.version }} ]"
+          else
+            versions=$(yq -o json $SOURCE_MAP | jq -r '.versions_to_snapshot')
+          fi
+
+          echo "versions=$versions" >> $GITHUB_OUTPUT
+  trigger-nightly:
+    needs: [ setup ]
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        version: ${{ fromJSON(needs.setup.outputs.versions) }}
+    steps:
+      - name: Generate github-app token
+        id: app-token
+        uses: getsentry/action-github-app-token@v2
+        with:
+          app_id: ${{ secrets.RHDS_DEVOPS_APP_ID }}
+          private_key: ${{ secrets.RHDS_DEVOPS_APP_PRIVATE_KEY }}
+      - name: clone ec-reporter repo
+        uses: actions/checkout@v3
+        with:
+          name: {{ env.GITHUB_ORG }}/EC-Reporter
+          token: ${{ steps.app-token.outputs.token }}
+        run: |
+          pwd
+          ls
+          epoch=$(date +%s)
+          update="{{ matrix.version }} $epoch"
+          echo $update > ./params
+          git commit -am "Update params to $update"
+          git push
