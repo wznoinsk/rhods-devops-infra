@@ -1,4 +1,4 @@
-name: Trigger Snapshots for Nightlies
+name: Create Snapshots and Run EC Validation
 
 on:
   schedule:
@@ -19,7 +19,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      releases: ${{ steps.extract.outputs.releases }}
+      versions: ${{ steps.extract.outputs.versions }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -27,12 +27,13 @@ jobs:
         id: extract
         run: |
           if [[ "${{ github.event_name  }}" == "workflow_dispatch" ]]
+          echo "${{ github.event.inputs }}"
           then
-            versions="[ ${{ github.event.inputs.version }} ]"
+            versions="[ \"${{ github.event.inputs.version }}\" ]"
           else
-            versions=$(yq -o json $SOURCE_MAP | jq -r '.versions_to_snapshot')
+            versions=$(yq -o json $SOURCE_MAP | jq '.versions_to_snapshot')
           fi
-
+          echo "versions=$versions"
           echo "versions=$versions" >> $GITHUB_OUTPUT
   trigger-nightly:
     needs: [ setup ]
@@ -52,14 +53,16 @@ jobs:
       - name: clone ec-reporter repo
         uses: actions/checkout@v3
         with:
-          name: ${{ env.GITHUB_ORG }}/EC-Reporter
+          repository: ${{ env.GITHUB_ORG }}/EC-Reporter
           token: ${{ steps.app-token.outputs.token }}
       - name: update ec-reporter
         run: |
           pwd
           ls
           epoch=$(date +%s)
-          update="{{ matrix.version }} $epoch"
+          update="${{ matrix.version }} $epoch"
           echo $update > ./params
+          git config --global user.name "rhods-devops-app[bot]"
+          git config --global user.email "323671+rhods-devops-app[bot]@users.noreply.github.com"
           git commit -am "Update params to $update"
           git push
