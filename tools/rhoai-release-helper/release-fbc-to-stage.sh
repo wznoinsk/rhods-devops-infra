@@ -6,12 +6,12 @@
 # Exit on error
 set -eo pipefail
 
-release_branch=rhoai-2.16
-rhoai_version=2.16.1
-hyphenized_rhoai_version=v2-16
+release_branch=rhoai-2.17
+rhoai_version=2.17.0
+hyphenized_rhoai_version=v2-17
 
-image_uri=LATEST_NIGHTLY
-#image_uri="quay.io/rhoai/rhoai-fbc-fragment@sha256:f22c30986703bf09bd3c63ddc2f1140d099967a61bb1b579b9f5071e39588bf6"
+#image_uri=LATEST_NIGHTLY
+image_uri="quay.io/rhoai/rhoai-fbc-fragment@sha256:bd492cb7ff54cc3457a071d3ce9449babb397c018c2d50212622418301d9cc2e"
 
 FBC_QUAY_REPO=quay.io/rhoai/rhoai-fbc-fragment
 RBC_URL=https://github.com/red-hat-data-services/RHOAI-Build-Config
