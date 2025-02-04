@@ -3,8 +3,11 @@
 # yq
 # ~/.ssh/.quay_devops_application_token
 
+# Exit on error
+set -eo pipefail
+
 release_branch=rhoai-2.16
-rhoai_version=2.16.0
+rhoai_version=2.16.1
 hyphenized_rhoai_version=v2-16
 
 
@@ -15,6 +18,17 @@ component_application=rhoai-${hyphenized_rhoai_version}
 fbc_application_prefix=rhoai-fbc-fragment-ocp-
 
 RHOAI_QUAY_API_TOKEN=$(cat ~/.ssh/.quay_devops_application_token)
+
+# used gsed for MacOS
+if [[ "$(uname)" == "Darwin" ]]; then
+  if ! command -v gsed &>/dev/null; then
+      echo "gsed is not installed. Please install it using 'brew install gnu-sed'."
+      exit 1
+  fi
+  sed_command="gsed"
+else
+  sed_command="sed"
+fi
 
 current_dir=$(pwd)
 #workspace=/tmp/tmp.68Vts9xj27
@@ -30,6 +44,24 @@ release_fbc_dir=${release_artifacts_dir}/release-fbc
 
 mkdir -p ${release_components_dir}
 mkdir -p ${release_fbc_dir}
+
+# Function to delete the directories if an error occurs. This is to prevent the creation of duplicate manifests during re-runs.
+cleanup() {
+    echo "*****************************************************************************************"
+    echo "Error occurred at line $1".
+    echo "Failed Command: $BASH_COMMAND"
+    echo "*****************************************************************************************"
+    echo "Initializing Cleanup..."
+    set -x
+    rm -rf "${workspace}"
+    rm -rf "${release_components_dir}"
+    rm -rf "${release_fbc_dir}"
+    set +x
+    echo "Cleanup successful!"
+}
+
+# Set trap to call cleanup on script exit, but only if the exit code is non-zero
+trap 'if [ $? -ne 0 ]; then cleanup $LINENO; fi' EXIT
 
 template_dir=templates/prod
 
@@ -49,85 +81,107 @@ BUILD_CONFIG_PATH=${RBC_RELEASE_DIR}/config/build-config.yaml
 cd ${current_dir}
 
 
+ocp_versions_array=()
+while IFS= read -r version; do
+  ocp_versions_array+=("$version")
+done < <(yq eval '.config.supported-ocp-versions.release[]' $BUILD_CONFIG_PATH)
 
-readarray ocp_versions < <(yq eval '.config.supported-ocp-versions.release[]' $BUILD_CONFIG_PATH)
-first_ocp_version=$(echo ${ocp_versions[0]} | tr -d '\n')
+echo "*****************************************************************************************"
+printf "Generating FBC Artifacts For OCP Versions: $(printf "\"%s\" " "${ocp_versions_array[@]}")\n"
+echo "*****************************************************************************************"
+
+first_ocp_version=$(echo ${ocp_versions_array[0]} | tr -d '\n')
 fbc_application_tag=ocp-${first_ocp_version/v4/4}-${release_branch}
 first_image_uri=docker://${FBC_QUAY_REPO}:${fbc_application_tag}
 META=$(skopeo inspect "${first_image_uri}")
 RBC_RELEASE_BRANCH_COMMIT=$(echo $META | jq -r '.Labels | ."rbc-release-branch.commit"')
-echo "RBC_RELEASE_BRANCH_COMMIT=${RBC_RELEASE_BRANCH_COMMIT}"
+echo
+echo ">> Printing Metadata Info:"
+echo "First OCP Version: ${first_ocp_version}"
+echo "FBC Application Tag: ${fbc_application_tag}"
+echo "First Image URI: ${first_image_uri}"
+echo "RBC Release Branch Commit: ${RBC_RELEASE_BRANCH_COMMIT}"
 
 
-  while IFS= read -r ocp_version;
-  do
-    fbc_application_suffix=${ocp_version/v4./4}
-    fbc_application_name=${fbc_application_prefix}${fbc_application_suffix}
-    fbc_application_tag=ocp-${ocp_version/v4/4}-${release_branch}
-    echo "fbc_application_name=${fbc_application_name}"
-    echo "fbc_application_tag=${fbc_application_tag}"
+for ocp_version in "${ocp_versions_array[@]}"; do
+  echo
+  echo ">> Generating FBC Artifact for OCP ${ocp_version}"
+  fbc_application_suffix=${ocp_version/v4./4}
+  fbc_application_name=${fbc_application_prefix}${fbc_application_suffix}
+  fbc_application_tag=ocp-${ocp_version/v4/4}-${release_branch}
+  echo "fbc_application_suffix=${fbc_application_suffix}"
+  echo "fbc_application_name=${fbc_application_name}"
+  echo "fbc_application_tag=${fbc_application_tag}"
 
 
-    image_uri=docker://${FBC_QUAY_REPO}:${fbc_application_tag}
-    META=$(skopeo inspect "${image_uri}")
-    DIGEST=$(echo $META | jq -r .Digest)
-    FULL_IMAGE_URI_WITH_DIGEST="${FBC_QUAY_REPO}@${DIGEST}"
-    echo "FBCF-${ocp_version} - ${FULL_IMAGE_URI_WITH_DIGEST}"
-    RBC_CURRENT_COMMIT=$(echo $META | jq -r '.Labels | ."rbc-release-branch.commit"')
-    GIT_URL=$(echo $META | jq -r '.Labels | ."git.url"')
-    GIT_COMMIT=$(echo $META | jq -r '.Labels | ."git.commit"')
+  image_uri=docker://${FBC_QUAY_REPO}:${fbc_application_tag}
+  META=$(skopeo inspect "${image_uri}")
+  DIGEST=$(echo $META | jq -r .Digest)
+  FULL_IMAGE_URI_WITH_DIGEST="${FBC_QUAY_REPO}@${DIGEST}"
+  echo "FBCF-${ocp_version} - ${FULL_IMAGE_URI_WITH_DIGEST}"
+  RBC_CURRENT_COMMIT=$(echo $META | jq -r '.Labels | ."rbc-release-branch.commit"')
+  GIT_URL=$(echo $META | jq -r '.Labels | ."git.url"')
+  GIT_COMMIT=$(echo $META | jq -r '.Labels | ."git.commit"')
 
-    if [[ ${RBC_CURRENT_COMMIT} != ${RBC_RELEASE_BRANCH_COMMIT} ]]
+  if [[ ${RBC_CURRENT_COMMIT} != ${RBC_RELEASE_BRANCH_COMMIT} ]]
+  then
+    echo "Stage FBC images are out of sync, exiting.."
+    exit 1
+  fi
+
+  snapshot_count=$(oc get snapshot -l konflux-release-data/rbc-release-commit=${RBC_RELEASE_BRANCH_COMMIT} --no-headers | grep rhoai-fbc-fragment-ocp-${fbc_application_suffix} | awk '{print $1}' | wc -l)
+  if [[ $snapshot_count -eq 1 ]]
+  then
+    snapshot_name=$(oc get snapshot -l konflux-release-data/rbc-release-commit=${RBC_RELEASE_BRANCH_COMMIT} --no-headers | grep rhoai-fbc-fragment-ocp-${fbc_application_suffix} | awk '{print $1}')
+    echo "Found the production FBC snapshot for OCP ${ocp_version} to use for the release - ${snapshot_name}"
+
+    snapshot_container_image=$(oc get snapshot $snapshot_name -o=jsonpath='{.spec.components[0].containerImage}')
+
+      echo "snapshot_container_image = $snapshot_container_image"
+      echo "Stage_quay_image = $FULL_IMAGE_URI_WITH_DIGEST"
+
+    if [[ "$snapshot_container_image" != "$FULL_IMAGE_URI_WITH_DIGEST" ]]
     then
-      echo "Stage FBC images are out of sync, exiting.."
+      echo "Snapshot FBC image doesn't match with the latest quay image on stage for OCP version ${ocp_version}, exiting.. "
+      echo "snapshot_container_image = $snapshot_container_image"
+      echo "Stage_quay_image = $FULL_IMAGE_URI_WITH_DIGEST"
       exit 1
     fi
+    
+    echo "Generating FBC Release CRs..."
+    fbc_release_yaml_path=${release_fbc_dir}/prod-release-fbc-ocp-${fbc_application_suffix}-${component_application}-${epoch}.yaml
 
-    snapshot_count=$(oc get snapshot -l konflux-release-data/rbc-release-commit=${RBC_RELEASE_BRANCH_COMMIT} --no-headers | grep rhoai-fbc-fragment-ocp-${fbc_application_suffix} | awk '{print $1}' | wc -l)
-    if [[ $snapshot_count -eq 1 ]]
-    then
-      snapshot_name=$(oc get snapshot -l konflux-release-data/rbc-release-commit=${RBC_RELEASE_BRANCH_COMMIT} --no-headers | grep rhoai-fbc-fragment-ocp-${fbc_application_suffix} | awk '{print $1}')
-      echo "Found the production FBC snapshot for OCP ${ocp_version} to use for the release - ${snapshot_name}"
+    #replace variables
+    cp ${template_dir}/release-fbc-prod.yaml ${fbc_release_yaml_path}
+    ${sed_command} -i "s/{{fbc_application}}/${fbc_application_name}/g" ${fbc_release_yaml_path}
+    ${sed_command} -i "s/{{epoch}}/${epoch}/g" ${fbc_release_yaml_path}
+    ${sed_command} -i "s/{{ocp-version}}/ocp-${fbc_application_suffix}/g" ${fbc_release_yaml_path}
+    ${sed_command} -i "s/{{hyphenized-rhoai-version}}/${hyphenized_rhoai_version}/g" ${fbc_release_yaml_path}
+    ${sed_command} -i "s/{{rbc_release_commit}}/${RBC_RELEASE_BRANCH_COMMIT}/g" ${fbc_release_yaml_path}
 
-      snapshot_container_image=$(oc get snapshot $snapshot_name -o=jsonpath='{.spec.components[0].containerImage}')
+    #replace snapshot
+    snapshot_name=${snapshot_name} yq e -i '.spec.snapshot = env(snapshot_name)' ${fbc_release_yaml_path}
+    echo "Successfully generated the Release CR manifest - ${fbc_application_name}-prod-${epoch}"
+  elif [[ $snapshot_count -gt 1 ]]
+  then
+    echo "Found multiple FBC snapshots with the given condition, please cleanup manually and ensure only one eligible snapshot exists ...exiting"
+    oc get snapshot -l konflux-release-data/rbc-release-commit=${RBC_RELEASE_BRANCH_COMMIT} | grep rhoai-fbc-fragment-ocp-${fbc_application_suffix}
+    exit 1
+  else
+    echo "Could not find any appropriate components-snapshot to promote to production...exiting"
+    exit 1
+  fi
 
-        echo "snapshot_container_image = $snapshot_container_image"
-        echo "Stage_quay_image = $FULL_IMAGE_URI_WITH_DIGEST"
+done
 
-      if [[ "$snapshot_container_image" != "$FULL_IMAGE_URI_WITH_DIGEST" ]]
-      then
-        echo "Snapshot FBC image doesn't match with the latest quay image on stage for OCP version ${ocp_version}, exiting.. "
-        echo "snapshot_container_image = $snapshot_container_image"
-        echo "Stage_quay_image = $FULL_IMAGE_URI_WITH_DIGEST"
-        exit 1
-      fi
-      # generate FBC Release CR
-      fbc_release_yaml_path=${release_fbc_dir}/prod-release-fbc-ocp-${fbc_application_suffix}-${component_application}-${epoch}.yaml
+echo
+echo ">> All FBC images tag are matching! Release CR Manifest Generated Successfully! "
+echo
 
-      #replace variables
-      cp ${template_dir}/release-fbc-prod.yaml ${fbc_release_yaml_path}
-      sed -i "s/{{fbc_application}}/${fbc_application_name}/g" ${fbc_release_yaml_path}
-      sed -i "s/{{epoch}}/${epoch}/g" ${fbc_release_yaml_path}
-      sed -i "s/{{ocp-version}}/ocp-${fbc_application_suffix}/g" ${fbc_release_yaml_path}
-      sed -i "s/{{hyphenized-rhoai-version}}/${hyphenized_rhoai_version}/g" ${fbc_release_yaml_path}
-      sed -i "s/{{rbc_release_commit}}/${RBC_RELEASE_BRANCH_COMMIT}/g" ${fbc_release_yaml_path}
-
-      #replace snapshot
-      snapshot_name=${snapshot_name} yq e -i '.spec.snapshot = env(snapshot_name)' ${fbc_release_yaml_path}
-      echo "Successfully generated the Release - ${fbc_application_name}-prod-${epoch}"
-    elif [[ $snapshot_count -gt 1 ]]
-    then
-      echo "Found multiple FBC snapshots with the given condition, please cleanup manually and ensure only one eligible snapshot exists ...exiting"
-      oc get snapshot -l konflux-release-data/rbc-release-commit=${RBC_RELEASE_BRANCH_COMMIT} | grep rhoai-fbc-fragment-ocp-${fbc_application_suffix}
-      exit 1
-    else
-      echo "Could not find any appropriate components-snapshot to promote to production...exiting"
-      exit 1
-    fi
-  done < <(yq eval '.config.supported-ocp-versions.release[]' $BUILD_CONFIG_PATH)
-echo "all FBC images tag are matching!"
-
-
+echo "*****************************************************************************************"
+echo "                   Generating Release Artifacts For Components                           "
+echo "*****************************************************************************************"
+echo
 echo "Verifying if the required components snapshots exists for prod push.."
 
 snapshot_count=$(oc get snapshot -l konflux-release-data/rbc-release-commit=${RBC_RELEASE_BRANCH_COMMIT} --no-headers | grep ${component_application} | awk '{print $1}' | wc -l)
@@ -136,7 +190,7 @@ components_snapshot_name=
 if [[ $snapshot_count -eq 1 ]]
 then
   components_snapshot_name=$(oc get snapshot -l konflux-release-data/rbc-release-commit=${RBC_RELEASE_BRANCH_COMMIT} --no-headers | grep ${component_application} | awk '{print $1}')
-  echo "Found the production snashot to use for the release - ${components_snapshot_name} "
+  echo "Found the production snapshot to use for the release - ${components_snapshot_name} "
 elif [[ $snapshot_count -gt 1 ]]
 then
   echo "Found multiple snapshots with the given condition, please cleanup manually and ensure only one eligible snapshot exists ...exiting"
@@ -179,11 +233,11 @@ components_release_yaml_path=${release_components_dir}/prod-release-components-$
 
   #replace variables
   cp ${template_dir}/release-components-prod.yaml ${components_release_yaml_path}
-  sed -i "s/{{component_application}}/${component_application}/g" ${components_release_yaml_path}
-  sed -i "s/{{epoch}}/${epoch}/g" ${components_release_yaml_path}
-  sed -i "s/{{hyphenized-rhoai-version}}/${hyphenized_rhoai_version}/g" ${components_release_yaml_path}
-  sed -i "s/{{rbc_release_commit}}/${RBC_RELEASE_BRANCH_COMMIT}/g" ${components_release_yaml_path}
+  ${sed_command} -i "s/{{component_application}}/${component_application}/g" ${components_release_yaml_path}
+  ${sed_command} -i "s/{{epoch}}/${epoch}/g" ${components_release_yaml_path}
+  ${sed_command} -i "s/{{hyphenized-rhoai-version}}/${hyphenized_rhoai_version}/g" ${components_release_yaml_path}
+  ${sed_command} -i "s/{{rbc_release_commit}}/${RBC_RELEASE_BRANCH_COMMIT}/g" ${components_release_yaml_path}
 
   #replace snapshot
   components_snapshot_name=${components_snapshot_name} yq e -i '.spec.snapshot = env(components_snapshot_name)' ${components_release_yaml_path}
-  echo "Successfully generated the Release - ${component_application}-prod-${epoch}!!"
+  echo "Successfully generated the component release manifest - ${component_application}-prod-${epoch}!!"
