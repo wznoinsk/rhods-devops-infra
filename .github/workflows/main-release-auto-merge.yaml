@@ -39,6 +39,7 @@ on:
           - distributed-workloads
           - vllm
           - vllm-gaudi
+          - ilab-on-ocp
 
   schedule:
     - cron: '0 1 * * *'

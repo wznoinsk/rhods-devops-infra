@@ -106,3 +106,7 @@ git:
   automerge: 'yes'
   repo-url: https://github.com/red-hat-data-services/fms-guardrails-orchestrator.git
   ignore-files: '.tekton/*'
+- name: ilab-on-ocp
+  automerge: 'yes'
+  repo-url: https://github.com/red-hat-data-services/ilab-on-ocp.git
+  ignore-files: '.tekton/*'
