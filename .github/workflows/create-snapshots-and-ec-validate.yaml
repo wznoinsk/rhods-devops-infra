@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        required: true
+        required: false
         type: string
         description: Full RHOAI version number X.Y.Z
 
@@ -26,12 +26,12 @@ jobs:
       - name: Extract all versions
         id: extract
         run: |
-          if [[ "${{ github.event_name  }}" == "workflow_dispatch" ]]
+          if [[ "${{ github.event_name  }}" != "workflow_dispatch" || "${{github.event.inputs.version}}" == "" ]]
           then
+            versions=$(yq -o json $SOURCE_MAP | jq --compact-output '.versions_to_snapshot')
+          else
             echo "${{ github.event.inputs }}"
             versions="[ \"${{ github.event.inputs.version }}\" ]"
-          else
-            versions=$(yq -o json $SOURCE_MAP | jq '.versions_to_snapshot')
           fi
           echo "versions=$versions"
           echo "versions=$versions" >> $GITHUB_OUTPUT
