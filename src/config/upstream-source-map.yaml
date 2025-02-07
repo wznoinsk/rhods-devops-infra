@@ -259,7 +259,7 @@ git:
   automerge: 'yes'
   src:
     url: https://github.com/opendatahub-io/lm-evaluation-harness.git
-    branch: release-0.4.5
+    branch: release-0.4.6
   dest:
     url: https://github.com/red-hat-data-services/lm-evaluation-harness.git
     branch: main
