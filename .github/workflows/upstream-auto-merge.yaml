@@ -92,7 +92,6 @@ jobs:
     needs: [ setup ]
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 1
       fail-fast: false
       matrix:
         mapping: ${{ fromJSON(needs.setup.outputs.matrix) }}
