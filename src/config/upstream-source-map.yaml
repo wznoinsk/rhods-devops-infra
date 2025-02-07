@@ -16,7 +16,7 @@ git:
     url: https://github.com/red-hat-data-services/kubeflow.git
     branch: main
 - name: modelmesh-serving
-  automerge: 'yes'
+  automerge: 'no'
   src:
     url: https://github.com/opendatahub-io/modelmesh-serving.git
     branch: release-0.12.0-rc0
@@ -33,7 +33,7 @@ git:
     url: https://github.com/red-hat-data-services/odh-model-controller.git
     branch: main
 - name: rest-proxy
-  automerge: 'yes'
+  automerge: 'no'
   src:
     url: https://github.com/opendatahub-io/rest-proxy.git
     branch: release-0.12.0-rc0
@@ -41,7 +41,7 @@ git:
     url: https://github.com/red-hat-data-services/rest-proxy.git
     branch: main
 - name: modelmesh
-  automerge: 'yes'
+  automerge: 'no'
   src:
     url: https://github.com/opendatahub-io/modelmesh.git
     branch: release-0.12.0-rc0
@@ -49,7 +49,7 @@ git:
     url: https://github.com/red-hat-data-services/modelmesh.git
     branch: main
 - name: modelmesh-runtime-adapter
-  automerge: 'yes'
+  automerge: 'no'
   src:
     url: https://github.com/opendatahub-io/modelmesh-runtime-adapter.git
     branch: release-0.12.0-rc0
@@ -206,7 +206,7 @@ git:
     url: https://github.com/red-hat-data-services/model-registry-operator.git
     branch: main
 - name: kserve
-  automerge: 'yes'
+  automerge: 'no'
   src:
     url: https://github.com/opendatahub-io/kserve.git
     branch: release-v0.14
