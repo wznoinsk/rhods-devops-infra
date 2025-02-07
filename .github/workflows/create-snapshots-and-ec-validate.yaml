@@ -8,7 +8,9 @@ on:
       version:
         required: false
         type: string
-        description: Full RHOAI version number X.Y.Z
+        description: |
+          Full RHOAI version number X.Y.Z 
+          or blank to use contents of src/config/releases.yaml
 
 env:
   GITHUB_ORG: red-hat-data-services
