@@ -24,7 +24,7 @@ git:
     url: https://github.com/red-hat-data-services/modelmesh-serving.git
     branch: main
 - name: odh-model-controller
-  automerge: 'yes'
+  automerge: 'no'
   ignore-files: config/base/params.env 
   src:
     url: https://github.com/opendatahub-io/odh-model-controller.git
