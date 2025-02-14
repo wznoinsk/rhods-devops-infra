@@ -75,10 +75,10 @@ class release_processor:
             if entry:
                 parts = entry.split('\t')
                 component_name = parts[0]
-                component_repo = parts[1].split('@')[0]
+                component_repo = parts[1].split('@')[0].strip('\n')
                 if 'fbc' not in component_name:
                     konflux_components[component_repo] = component_name
-
+        print('konflux_components', konflux_components)
         return konflux_components
 
 
@@ -108,6 +108,13 @@ class release_processor:
             signature = qc.get_tag_details(repo, sig_tag)
             # signature=True
             if signature:
+                manifest_json = qc.get_manifest_details(repo, manifest_digest)
+                if manifest_json['is_manifest_list'] == True:
+                    image_manifest_digests = qc.get_image_manifest_digests_for_all_the_supported_archs(repo,
+                                                                                                       manifest_digest)
+                    if image_manifest_digests:
+                        manifest_digest = image_manifest_digests[0]
+
                 labels = qc.get_git_labels(repo, manifest_digest)
                 labels = {label['key']: label['value'] for label in labels if label['value']}
                 git_url = labels[self.GIT_URL_LABEL_KEY]
@@ -181,6 +188,38 @@ class quay_controller:
         if 'tags' in response.json():
             tag = response.json()['tags']
             return tag
+        else:
+            print(response.json())
+            sys.exit(1)
+
+    def get_supported_archs(self, repo, manifest_digest):
+        manifest_json = self.get_manifest_details(repo, manifest_digest)
+        supported_archs = []
+        if manifest_json['is_manifest_list'] == True:
+            manifest_data = manifest_json['manifest_data']
+            manifest_data = json.loads(manifest_data)
+            for manifest in manifest_data['manifests']:
+                supported_archs.append(f'{manifest["platform"]["os"]}-{manifest["platform"]["architecture"]}')
+        return supported_archs
+
+    def get_image_manifest_digests_for_all_the_supported_archs(self, repo, manifest_digest):
+        manifest_json = self.get_manifest_details(repo, manifest_digest)
+        image_manifest_digests = []
+        if manifest_json['is_manifest_list'] == True:
+            manifest_data = manifest_json['manifest_data']
+            manifest_data = json.loads(manifest_data)
+            for manifest in manifest_data['manifests']:
+                image_manifest_digests.append(manifest['digest'])
+        return image_manifest_digests
+
+    def get_manifest_details(self, repo, manifest_digest):
+        url = f'{BASE_URL}/repository/{self.org}/{repo}/manifest/{manifest_digest}'
+        headers = {'Authorization': f'Bearer {os.environ[self.org.upper() + "_QUAY_API_TOKEN"]}',
+                   'Accept': 'application/json'}
+        response = requests.get(url, headers=headers)
+
+        if 'manifest_data' in response.json():
+            return response.json()
         else:
             print(response.json())
             sys.exit(1)
