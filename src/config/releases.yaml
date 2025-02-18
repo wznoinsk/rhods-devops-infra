@@ -1,3 +1,4 @@
-releases: []
+releases:
+- rhoai-2.19
 versions_to_snapshot:
 - 2.18.0
