@@ -1,12 +1,13 @@
 #!/bin/bash
 #Prerequisites
 # jq
+set -eo pipefail
 
 function help {
 cat <<EOF
-RHOAI_QUAY_API_TOKEN=TOKEN_PATH ./generate-nightly-override-snapshot.sh RHOAI_VERSION
+RHOAI_QUAY_API_TOKEN=TOKEN_PATH ./generate-nightly-override-snapshot.sh IMAGE_URI
   TOKEN_PATH - path to the quay API token
-  RHOAI_VERSION - the full version of the nightly you want to generate, in the form X.Y.Z. (example: 2.17.0)
+  IMAGE_URI - the image URI for which you want to generate a snapshot
 EOF
 }
 
@@ -32,28 +33,34 @@ else
   sed_command="sed"
 fi
 
-# example: 2.17.0
-rhoai_version=$1
+image_uri=$1
 
-if [ -z "$rhoai_version" ]; then
-  echo "Please indicate which RHOAI version for the snapshot"
+if [ -z "$image_uri" ]; then
+  echo "Please specify an image URI to make snapshots from."
   help
   exit 1
 fi
 
-# rhoai-2.17
-release_branch=$(echo "$rhoai_version" | awk -F '.' '{ print "rhoai-" $1 "." $2}')
-# v2-17
-hyphenized_rhoai_version=$(echo "$rhoai_version" | awk -F '.' '{ print "v" $1 "-" $2}')
 
 
 FBC_QUAY_REPO=quay.io/rhoai/rhoai-fbc-fragment
 RBC_URL=https://github.com/red-hat-data-services/RHOAI-Build-Config
 
-image_uri=docker://${FBC_QUAY_REPO}:${release_branch}-nightly
-
+# image_uri=docker://${FBC_QUAY_REPO}:${release_branch}-nightly
+# removing leading https:// or http://
+image_uri=$(echo "$image_uri" | sed -E 's|^https?://||')
+# removing tag from URI if both tag and shasum are present
+image_uri=$(echo "$image_uri" | sed 's/:.*@/@/')
 skopeo login -u '$oauthtoken' -p "$RHOAI_QUAY_API_TOKEN" quay.io/rhoai
-META=$(skopeo inspect --no-tags "${image_uri}")
+META=$(skopeo inspect --no-tags "docker://${image_uri}")
+
+# example: 2.17.0
+rhoai_version=$(echo "$META" | jq -r '.Labels.version' | sed 's/v//')
+# example: rhoai-2.17
+release_branch=$(echo "$rhoai_version" |  awk -F '.' '{ print "rhoai-" $1 "." $2}')
+# example: v2-17
+hyphenized_rhoai_version=$(echo "$rhoai_version" | awk -F '.' '{ print "v" $1 "-" $2}')
+
 DIGEST=$(echo $META | jq -r .Digest)
 image_uri=${FBC_QUAY_REPO}@${DIGEST}
 RBC_RELEASE_BRANCH_COMMIT=$(echo $META | jq -r '.Labels | ."git.commit"')
@@ -112,10 +119,11 @@ CATALOG_YAML_PATH=${RBC_RELEASE_DIR}/${V417_CATALOG_YAML_PATH}
 
 RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH=${workspace}/konflux_components.txt
 
-kubectl get components -o=jsonpath="{range .items[?(@.spec.application=='${component_application}')]}{@.metadata.name}{'\t'}{@.spec.containerImage}{'\n'}{end}" | tee ${RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH}
+kubectl get components -o=jsonpath="{range .items[?(@.spec.application=='${component_application}')]}{@.metadata.name}{'\t'}{@.status.lastPromotedImage}{'\n'}{end}" | tee ${RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH}
 
 
-RHOAI_QUAY_API_TOKEN=${RHOAI_QUAY_API_TOKEN} python release_processor.py --operation generate-snapshots --catalog-yaml-path ${CATALOG_YAML_PATH} --konflux-components-details-file-path ${RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH} --rhoai-version ${rhoai_version} --rhoai-application ${component_application} --epoch ${epoch} --output-dir ${output_dir} --template-dir ${template_dir} --rbc-release-commit ${RBC_RELEASE_BRANCH_COMMIT}
+release_processor_path="../rhoai-release-helper/release_processor.py"
+RHOAI_QUAY_API_TOKEN=${RHOAI_QUAY_API_TOKEN} python "$release_processor_path" --operation generate-snapshots --catalog-yaml-path ${CATALOG_YAML_PATH} --konflux-components-details-file-path ${RHOAI_KONFLUX_COMPONENTS_DETAILS_FILE_PATH} --rhoai-version ${rhoai_version} --rhoai-application ${component_application} --epoch ${epoch} --output-dir ${output_dir} --template-dir ${template_dir} --rbc-release-commit ${RBC_RELEASE_BRANCH_COMMIT}
 
 # generate FBC snapshot
 ocp_version="v4.17"
