@@ -6,12 +6,15 @@
 # Exit on error
 set -eo pipefail
 
-release_branch=rhoai-2.17
-rhoai_version=2.17.0
-hyphenized_rhoai_version=v2-17
+release_branch=rhoai-2.18
+rhoai_version=2.18.0
+hyphenized_rhoai_version=v2-18
 
 #image_uri=LATEST_NIGHTLY
-image_uri="quay.io/rhoai/rhoai-fbc-fragment@sha256:bd492cb7ff54cc3457a071d3ce9449babb397c018c2d50212622418301d9cc2e"
+image_uri="http://quay.io/rhoai/rhoai-fbc-fragment:rhoai-2.18@sha256:a032bf4e60d7400c38ea85740f8b447810574459135df5686afdb4830b2ef66f"
+
+# replaces https:// and tag if they are present
+image_uri=$(echo $image_uri | sed -E 's|^https?://||' | sed 's/:.*@/@/')
 
 FBC_QUAY_REPO=quay.io/rhoai/rhoai-fbc-fragment
 RBC_URL=https://github.com/red-hat-data-services/RHOAI-Build-Config
@@ -20,7 +23,7 @@ RBC_URL=https://github.com/red-hat-data-services/RHOAI-Build-Config
 if [[ $image_uri == LATEST_NIGHTLY ]]; then image_uri=docker://${FBC_QUAY_REPO}:${release_branch}-nightly; fi
 if [[ "$image_uri" != docker* ]]; then image_uri="docker://${image_uri}"; fi
 
-META=$(skopeo inspect "${image_uri}")
+META=$(skopeo inspect "${image_uri}" --override-arch amd64 --override-os linux)
 DIGEST=$(echo $META | jq -r .Digest)
 image_uri=${FBC_QUAY_REPO}@${DIGEST}
 RBC_RELEASE_BRANCH_COMMIT=$(echo $META | jq -r '.Labels | ."git.commit"')
@@ -85,6 +88,7 @@ git init -q
 git remote add origin $RBC_URL
 git config core.sparseCheckout true
 git config core.sparseCheckoutCone false
+mkdir -p .git/info
 echo "${V417_CATALOG_YAML_PATH}" >> .git/info/sparse-checkout
 git fetch -q --depth=1 origin ${RBC_RELEASE_BRANCH_COMMIT}
 git checkout -q ${RBC_RELEASE_BRANCH_COMMIT}
@@ -123,8 +127,15 @@ echo
 echo ">> Artifacts Generated Successfully!"
 echo
 
+confirm_message="Please verify that you have done the following:
+- all internal components are green
+- all external components are green
+- all nudges are verified
+- testops has run smoke tests on nightly
+Do you want to initiate push to staging? (y/n): "
+
 # After the release artifacts are generated, prompt for confirmation
-read -p "Do you want to initiate push to staging? (y/n): " user_input
+read -p "$confirm_message"  user_input
 
 
 if [[ "$user_input" == "y" || "$user_input" == "Y" ]]; then
