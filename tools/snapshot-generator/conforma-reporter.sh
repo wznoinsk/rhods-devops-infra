@@ -41,49 +41,49 @@ MODES="components fbc"
 for MODE in $MODES; do
   MESSAGE=
   if [ "$MODE" = fbc ]; then
-    ec_test="$APPLICATION-fbc-rhoai-prod-enterprise-contract"
+    conforma_test="$APPLICATION-fbc-rhoai-prod-enterprise-contract"
     snapshot_folder="nightly-snapshots/snapshot-fbc"
   else
-    ec_test="$APPLICATION-registry-rhoai-stage-enterprise-contract"
+    conforma_test="$APPLICATION-registry-rhoai-stage-enterprise-contract"
     snapshot_folder="nightly-snapshots/snapshot-components"
   fi
   ls nightly-snapshots/*
-  # apply and mark snapshot so that the EC gets run against it
+  # apply and mark snapshot so that the conforma gets run against it
   kubectl apply -f $snapshot_folder
   snapshot_name=$(kubectl get -f $snapshot_folder --no-headers | awk '{print $1}')
-  echo kubectl label snapshot "$snapshot_name" "test.appstudio.openshift.io/run=$ec_test"
-  kubectl label snapshot "$snapshot_name" "test.appstudio.openshift.io/run=$ec_test"
+  echo kubectl label snapshot "$snapshot_name" "test.appstudio.openshift.io/run=$conforma_test"
+  kubectl label snapshot "$snapshot_name" "test.appstudio.openshift.io/run=$conforma_test"
   
   # monitor pipelinerun 
-  ec_results_file=./$MODE-results.json 
+  conforma_results_file=./$MODE-results.json 
   monitor_snapshot_output=./monitor-$MODE-snapshot-output.txt
-  bash ./monitor-snapshot.sh "$snapshot_name" "$ec_test" "$monitor_snapshot_output" 
+  bash ./monitor-snapshot.sh "$snapshot_name" "$conforma_test" "$monitor_snapshot_output" 
 
   echo "processing log output"
 
   PIPELINE_NAME=$(cat "$monitor_snapshot_output" | tail -n 1 )
-  cat $monitor_snapshot_output | tail -n 2 | head -n 1 > "$ec_results_file"
+  cat $monitor_snapshot_output | tail -n 2 | head -n 1 > "$conforma_results_file"
 
   WEB_URL="https://konflux.apps.stone-prod-p02.hjvn.p1.openshiftapps.com/application-pipeline/workspaces/rhoai/applications/$APPLICATION" 
 
   # create formatted yaml file to send to slack
-  echo "Selecting violations out of ec results file"
-  cat "$ec_results_file" | jq '[.components[] | select(.violations)] | map({name, containerImage, violations: [.violations[] | {msg} + (.metadata | {code,description, solution})]}) ' | tee "./$MODE-ec-results-slack.json"
+  echo "Selecting violations out of conforma results file"
+  cat "$conforma_results_file" | jq '[.components[] | select(.violations)] | map({name, containerImage, violations: [.violations[] | {msg} + (.metadata | {code,description, solution})]}) ' | tee "./$MODE-conforma-results-slack.json"
   echo "converting to yaml"
-  cat "./$MODE-ec-results-slack.json" | yq -P | tee "./$MODE-ec-results-slack.yaml"
-  cat "./$MODE-ec-results-slack.json" | jq 'map( .name as $name | .violations | group_by(.code) | (map({ name: $name, code:.[0].code, msgs:[.[].msg] }) ) ) | reduce .[] as $z ([]; . += $z)| reduce .[] as $x ({}; .[$x.code] += [{component: $x.name, error_msgs:$x.msgs}])' | yq -P |  tee "./$MODE-ec-results-slack-2.yaml"
+  cat "./$MODE-conforma-results-slack.json" | yq -P | tee "./$MODE-conforma-results-slack.yaml"
+  cat "./$MODE-conforma-results-slack.json" | jq 'map( .name as $name | .violations | group_by(.code) | (map({ name: $name, code:.[0].code, msgs:[.[].msg] }) ) ) | reduce .[] as $z ([]; . += $z)| reduce .[] as $x ({}; .[$x.code] += [{component: $x.name, error_msgs:$x.msgs}])' | yq -P |  tee "./$MODE-conforma-results-slack-2.yaml"
   
   # create inital slack message
   echo "parsing results for slack message"
-  num_errors=$(cat "$ec_results_file"| jq '[.components[].violations | length] | add')
-  num_warnings=$(cat "$ec_results_file" | jq '[.components[].warnings | length] | add')
-  num_error_components=$(cat "$ec_results_file" | jq '[.components[] | select(.violations) | .name] | length')
-  num_warning_components=$(cat "$ec_results_file" | jq '[.components[] | select(.warnings) | .name] | length')
+  num_errors=$(cat "$conforma_results_file"| jq '[.components[].violations | length] | add')
+  num_warnings=$(cat "$conforma_results_file" | jq '[.components[].warnings | length] | add')
+  num_error_components=$(cat "$conforma_results_file" | jq '[.components[] | select(.violations) | .name] | length')
+  num_warning_components=$(cat "$conforma_results_file" | jq '[.components[] | select(.warnings) | .name] | length')
 
   MESSAGE=$(cat <<EOF
-*EC Validation Test Results ($MODE)*
+*Conforma Validation Test Results ($MODE)*
 Application: $APPLICATION
-Test Name: $ec_test 
+Test Name: $conforma_test 
 Pipeline Run: <$WEB_URL/pipelineruns/$PIPELINE_NAME|$PIPELINE_NAME>
 Errors: $num_errors errors across $num_error_components components
 Warnings: $num_warnings warnings across $num_warning_components components
@@ -92,5 +92,5 @@ EOF
   echo $MESSAGE
 
   echo "sending slack message with file attachment"
-  bash ../send-slack-message/send-slack-message.sh -v -c "$SLACK_CHANNEL" -m "$MESSAGE"  -f "./$MODE-ec-results-slack-2.yaml" -f "./$MODE-ec-results-slack.yaml"
+  bash ../send-slack-message/send-slack-message.sh -v -c "$SLACK_CHANNEL" -m "$MESSAGE"  -f "./$MODE-conforma-results-slack-2.yaml" -f "./$MODE-conforma-results-slack.yaml"
 done
