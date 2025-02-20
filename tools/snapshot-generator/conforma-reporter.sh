@@ -10,7 +10,7 @@ set -eo pipefail
 # SLACK_TOKEN - oauth token for slack
 # SLACK_CHANNEL - channel id to send message
 # RHOAI_QUAY_API_TOKEN 
-# VERSION - the rhoai version in x.y.z form, OR a full quay URL
+# VERSION - the rhoai version in x.y form, OR a full quay URL
 # KUBERNETES_SERVICE_HOST - should be set automatically by k8s
 # KUBERNETES_SERVICE_PORT_HTTPS - should be set automatically by k8s
 
@@ -41,10 +41,10 @@ MODES="components fbc"
 for MODE in $MODES; do
   MESSAGE=
   if [ "$MODE" = fbc ]; then
-    conforma_test="$APPLICATION-fbc-rhoai-prod-enterprise-contract"
+    conforma_test="conforma-fbc-rhoai-stage-${APPLICATION/rhoai-/}"
     snapshot_folder="nightly-snapshots/snapshot-fbc"
   else
-    conforma_test="$APPLICATION-registry-rhoai-stage-enterprise-contract"
+    conforma_test="conforma-registry-rhoai-stage-${APPLICATION/rhoai-/}"
     snapshot_folder="nightly-snapshots/snapshot-components"
   fi
   ls nightly-snapshots/*
