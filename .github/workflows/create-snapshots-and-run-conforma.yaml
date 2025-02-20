@@ -9,7 +9,7 @@ on:
         required: false
         type: string
         description: |
-          Full RHOAI version number X.Y.Z 
+          RHOAI main.minor version (X.Y)
           or quay URI 
           or blank to use contents of src/config/releases.yaml
 
