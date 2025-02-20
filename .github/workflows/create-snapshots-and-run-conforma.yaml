@@ -1,4 +1,4 @@
-name: Create Snapshots and Run EC Validation
+name: Create Snapshots and Run Conforma Validation
 
 on:
   schedule:
@@ -53,12 +53,12 @@ jobs:
         with:
           app_id: ${{ secrets.RHDS_DEVOPS_APP_ID }}
           private_key: ${{ secrets.RHDS_DEVOPS_APP_PRIVATE_KEY }}
-      - name: clone ec-reporter repo
+      - name: clone repo
         uses: actions/checkout@v3
         with:
-          repository: ${{ env.GITHUB_ORG }}/EC-Reporter
+          repository: ${{ env.GITHUB_ORG }}/conforma-reporter
           token: ${{ steps.app-token.outputs.token }}
-      - name: update ec-reporter
+      - name: update conforma-reporter
         run: |
           pwd
           ls
