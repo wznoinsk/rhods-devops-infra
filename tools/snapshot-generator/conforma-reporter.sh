@@ -23,8 +23,7 @@ kubectl config set-context snapshot --user=snapshot-sa --cluster=default
 kubectl config use-context snapshot
 
 
-from_quay=$(echo $VERSION | grep -o quay)
-if [ "$from_quay" = "quay" ]; then
+if echo $VERSION | grep -o quay; then
   IMAGE_URI=$VERSION
 else
   IMAGE_URI="quay.io/rhoai/rhoai-fbc-fragment:rhoai-${VERSION}-nightly"
