@@ -10,7 +10,7 @@ set -eo pipefail
 # SLACK_TOKEN - oauth token for slack
 # SLACK_CHANNEL - channel id to send message
 # RHOAI_QUAY_API_TOKEN 
-# VERSION - the rhoai version in x.y form, OR a full quay URL
+# SNAPSHOT_TARGET - Either the release branch in "rhoai-x.y" form, OR a full quay URL
 # KUBERNETES_SERVICE_HOST - should be set automatically by k8s
 # KUBERNETES_SERVICE_PORT_HTTPS - should be set automatically by k8s
 
@@ -23,10 +23,10 @@ kubectl config set-context snapshot --user=snapshot-sa --cluster=default
 kubectl config use-context snapshot
 
 
-if echo $VERSION | grep -o quay; then
-  IMAGE_URI=$VERSION
+if echo $SNAPSHOT_TARGET | grep -o quay; then
+  IMAGE_URI=$SNAPSHOT_TARGET
 else
-  IMAGE_URI="quay.io/rhoai/rhoai-fbc-fragment:rhoai-${VERSION}-nightly"
+  IMAGE_URI="quay.io/rhoai/rhoai-fbc-fragment:${SNAPSHOT_TARGET}-nightly"
 fi
 
 # generate snapshots

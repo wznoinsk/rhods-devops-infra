@@ -9,9 +9,9 @@ on:
         required: false
         type: string
         description: |
-          RHOAI main.minor version (X.Y)
+          RHOAI release branch (rhoai-X.Y)
           or quay URI 
-          or blank to use contents of src/config/releases.yaml
+          or blank to release branches listed in src/config/releases.yaml
 
 env:
   GITHUB_ORG: red-hat-data-services
@@ -31,7 +31,7 @@ jobs:
         run: |
           if [[ "${{ github.event_name  }}" != "workflow_dispatch" || "${{github.event.inputs.version}}" == "" ]]
           then
-            versions=$(yq -o json $SOURCE_MAP | jq --compact-output '.versions_to_snapshot')
+            versions=$(yq -o json $SOURCE_MAP | jq --compact-output '.releases')
           else
             echo "${{ github.event.inputs }}"
             versions="[ \"${{ github.event.inputs.version }}\" ]"
