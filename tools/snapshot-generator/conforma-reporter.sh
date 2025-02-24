@@ -69,8 +69,8 @@ for MODE in $MODES; do
   echo "Selecting violations out of conforma results file"
   cat "$conforma_results_file" | jq '[.components[] | select(.violations)] | map({name, containerImage, violations: [.violations[] | {msg} + (.metadata | {code,description, solution})]}) ' | tee "./$MODE-conforma-results-slack.json"
   echo "converting to yaml"
-  cat "./$MODE-conforma-results-slack.json" | yq -P | tee "./$MODE-conforma-results-slack.yaml"
-  cat "./$MODE-conforma-results-slack.json" | jq 'map( .name as $name | .violations | group_by(.code) | (map({ name: $name, code:.[0].code, msgs:[.[].msg] }) ) ) | reduce .[] as $z ([]; . += $z)| reduce .[] as $x ({}; .[$x.code] += [{component: $x.name, error_msgs:$x.msgs}])' | yq -P |  tee "./$MODE-conforma-results-slack-2.yaml"
+  cat "./$MODE-conforma-results-slack.json" | yq -P | tee "./$MODE-conforma-results-slack-by-component.yaml"
+  cat "./$MODE-conforma-results-slack.json" | jq 'map( .name as $name | .violations | group_by(.code) | (map({ name: $name, code:.[0].code, msgs:[.[].msg] }) ) ) | reduce .[] as $z ([]; . += $z)| reduce .[] as $x ({}; .[$x.code] += [{component: $x.name, error_msgs:$x.msgs}])' | yq -P |  tee "./$MODE-conforma-results-slack-by-violation.yaml"
   
   # create inital slack message
   echo "parsing results for slack message"
@@ -78,11 +78,13 @@ for MODE in $MODES; do
   num_warnings=$(cat "$conforma_results_file" | jq '[.components[].warnings | length] | add')
   num_error_components=$(cat "$conforma_results_file" | jq '[.components[] | select(.violations) | .name] | length')
   num_warning_components=$(cat "$conforma_results_file" | jq '[.components[] | select(.warnings) | .name] | length')
+  
+  conforma_policy=$(kubectl get integrationtestscenario "$conforma_test" -o jsonpath='{@.spec.params[?(@.name=="POLICY_CONFIGURATION")].value}')
 
   MESSAGE=$(cat <<EOF
-*Conforma Validation Test Results ($MODE)*
-Application: $APPLICATION
-Test Name: $conforma_test 
+*$APPLICATION Conforma Validation Test Results ($MODE)*
+Policy Name: $conforma_policy
+Snapshot: <$WEB_URL/snapshots/$snapshot_name|$snapshot_name>
 Pipeline Run: <$WEB_URL/pipelineruns/$PIPELINE_NAME|$PIPELINE_NAME>
 Errors: $num_errors errors across $num_error_components components
 Warnings: $num_warnings warnings across $num_warning_components components
@@ -91,5 +93,5 @@ EOF
   echo $MESSAGE
 
   echo "sending slack message with file attachment"
-  bash ../send-slack-message/send-slack-message.sh -v -c "$SLACK_CHANNEL" -m "$MESSAGE"  -f "./$MODE-conforma-results-slack-2.yaml" -f "./$MODE-conforma-results-slack.yaml"
+  bash ../send-slack-message/send-slack-message.sh -v -c "$SLACK_CHANNEL" -m "$MESSAGE"  -f "./$MODE-conforma-results-slack-by-violation.yaml" -f "./$MODE-conforma-results-slack-by-component.yaml"
 done

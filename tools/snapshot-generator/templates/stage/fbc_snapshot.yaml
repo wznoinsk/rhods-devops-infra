@@ -3,6 +3,8 @@ kind: Snapshot
 metadata:
   name: {{fbc_component}}-{{epoch}}
   namespace: rhoai-tenant
+  labels:
+    appstudio.openshift.io/application: rhoai-v2-19
 spec:
   application: {{rhoai_application}}
   components:
