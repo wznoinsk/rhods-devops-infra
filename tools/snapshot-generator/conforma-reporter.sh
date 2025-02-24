@@ -78,11 +78,13 @@ for MODE in $MODES; do
   num_warnings=$(cat "$conforma_results_file" | jq '[.components[].warnings | length] | add')
   num_error_components=$(cat "$conforma_results_file" | jq '[.components[] | select(.violations) | .name] | length')
   num_warning_components=$(cat "$conforma_results_file" | jq '[.components[] | select(.warnings) | .name] | length')
+  
+  conforma_policy=$(kubectl get integrationtestscenario "$conforma_test" -o jsonpath='{@.spec.params[?(@.name=="POLICY_CONFIGURATION")].value}')
 
   MESSAGE=$(cat <<EOF
-*Conforma Validation Test Results ($MODE)*
-Application: $APPLICATION
-Test Name: $conforma_test 
+*$APPLICATION Conforma Validation Test Results ($MODE)*
+Policy Name: $conforma_policy
+Snapshot: <$WEB_URL/snapshots/$snapshot_name|$snapshot_name>
 Pipeline Run: <$WEB_URL/pipelineruns/$PIPELINE_NAME|$PIPELINE_NAME>
 Errors: $num_errors errors across $num_error_components components
 Warnings: $num_warnings warnings across $num_warning_components components
