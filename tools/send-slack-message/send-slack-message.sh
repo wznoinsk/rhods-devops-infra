@@ -97,8 +97,7 @@ function send_slack_message {
   if [ -n "$thread" ]; then
     payload=$(echo "$payload" | jq --arg T "$thread" '.thread_ts = $T')
   fi
-  response_json=$(slack_post_json --data "$payload" https://slack.com/api/chat.postMessage)
-  echo "$response_json" | jq -r '.ts'
+  slack_post_json --data "$payload" https://slack.com/api/chat.postMessage
 }
 
 function send_slack_file {
@@ -142,13 +141,16 @@ for type in "${STACK[@]}"; do
   if [ "$type" = "message" ]; then
     log "sending message to thread id: $THREAD_ID" 
     message=${MESSAGES[$message_index]}
-    NEW_THREAD_ID=$(send_slack_message "$message" "$THREAD_ID")
+    response=$(send_slack_message "$message" "$THREAD_ID")
+    log $(echo "$response" | jq)
+    NEW_THREAD_ID=$(echo "$response" | jq -r '.ts')
     log "Message sent"
     message_index=$(( $message_index + 1 ))
   else
     log "sending file to thread id: $THREAD_ID"
     file_path=${FILES[$file_index]}
-    send_slack_file "$file_path" "$THREAD_ID"
+    response=$(send_slack_file "$file_path" "$THREAD_ID")
+    log $(echo "$response" | jq)
     log "File sent"
     file_index=$(( $file_index + 1 ))
     # this helps keep the order of the messages correct 
