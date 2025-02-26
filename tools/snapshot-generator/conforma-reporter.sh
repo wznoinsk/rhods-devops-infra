@@ -1,4 +1,4 @@
-#!/bin/bash
+
 
 set -eo pipefail
 
@@ -90,7 +90,7 @@ Errors: $num_errors errors across $num_error_components components
 Warnings: $num_warnings warnings across $num_warning_components components
 EOF
 )
-  echo $MESSAGE
+  echo "$MESSAGE"
 
   echo "sending slack message with file attachment"
   bash ../send-slack-message/send-slack-message.sh -v -c "$SLACK_CHANNEL" -m "$MESSAGE"  -f "./$MODE-conforma-results-slack-by-violation.yaml" -f "./$MODE-conforma-results-slack-by-component.yaml"
