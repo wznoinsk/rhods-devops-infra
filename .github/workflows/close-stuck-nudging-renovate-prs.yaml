@@ -43,7 +43,7 @@ jobs:
             set -x
             curl -X POST \
               -H 'Content-type: application/json' \
-              -d '{"run_datetime": "'"$RUN_DATETIME"'", "repo_name": "GitHub Workflow *'"${2}"'* exited with code '"${1}"'. '"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"}' \
+              -d '{"run_datetime": "'"$RUN_DATETIME"'", "pr_title": "GitHub Workflow *'"${2}"'* exited with code '"${1}"'. '"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"'"}' \
               $SLACK_WORKFLOW_URL
           }
 
