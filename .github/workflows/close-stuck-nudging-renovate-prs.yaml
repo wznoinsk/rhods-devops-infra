@@ -130,7 +130,7 @@ jobs:
                 set -x
                 curl -X POST \
                   -H 'Content-type: application/json' \
-                  -d '{"run_datetime": "'"${RUN_DATETIME}"'", "repo_name": "'"${REPO_NAME}"'", "pr_number":"'"${PR[0]}"'", "pr_title": '"${PR[1]}"', "pr_state": '"${PR[2]}"', "pr_url": '"${PR[3]}"', "msg_post": ""}' \
+                  -d '{"run_datetime": "'"${RUN_DATETIME}"'", "msg_pre": "stuck Renovate Pull Requests found", "repo_name": "'"${REPO_NAME}"'", "pr_number":"'"${PR[0]}"'", "pr_title": '"${PR[1]}"', "pr_state": '"${PR[2]}"', "pr_url": '"${PR[3]}"', "msg_post": "these PRs should already be closed by the gh workflow, check why they are not closed"}' \
                   $SLACK_WORKFLOW_URL
                 set +x
 
